@@ -1878,24 +1878,36 @@ Als mensen vragen naar specifieke prijzen of een offerte willen, adviseer ze dan
 });
 
 // Serve Vite dev server or static build assets
-async function startServer() {
+function configureProductionAssets() {
+  if (process.env.NODE_ENV !== "production") {
+    return;
+  }
+
+  const distPath = path.join(process.cwd(), "dist");
+  app.use(express.static(distPath));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(distPath, "index.html"));
+  });
+}
+
+configureProductionAssets();
+
+export default app;
+
+async function bootServer() {
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
     });
     app.use(vite.middlewares);
-  } else {
-    const distPath = path.join(process.cwd(), "dist");
-    app.use(express.static(distPath));
-    app.get("*", (req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
-    });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server draait op http://localhost:${PORT}`);
-  });
+  if (!process.env.VERCEL) {
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`Server draait op http://localhost:${PORT}`);
+    });
+  }
 }
 
-startServer();
+void bootServer();
