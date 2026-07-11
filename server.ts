@@ -1,7 +1,6 @@
 import express from "express";
 import path from "path";
 import fs from "fs";
-import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 import type { QuoteRequest } from "./src/types";
@@ -10,7 +9,7 @@ dotenv.config();
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
-const DB_FILE = path.join(process.cwd(), "quotes_db.json");
+const DB_FILE = path.join(process.env.VERCEL ? "/tmp" : process.cwd(), "quotes_db.json");
 
 type StoredQuote = QuoteRequest;
 
@@ -1903,7 +1902,8 @@ configureProductionAssets();
 export default app;
 
 async function bootServer() {
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV !== "production" && !process.env.VERCEL) {
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
