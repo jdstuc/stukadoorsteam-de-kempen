@@ -1879,14 +1879,22 @@ Als mensen vragen naar specifieke prijzen of een offerte willen, adviseer ze dan
 
 // Serve Vite dev server or static build assets
 function configureProductionAssets() {
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV !== "production" && !process.env.VERCEL) {
     return;
   }
 
   const distPath = path.join(process.cwd(), "dist");
   app.use(express.static(distPath));
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(distPath, "index.html"));
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api/")) {
+      return next();
+    }
+
+    res.sendFile(path.join(distPath, "index.html"), (error) => {
+      if (error) {
+        next(error);
+      }
+    });
   });
 }
 
