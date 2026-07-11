@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin
+
+Host: https://www.stukadoorsteamdekempen.nl
+Sitemap: https://www.stukadoorsteamdekempen.nl/sitemap.xml

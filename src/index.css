@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand-beige-50: #FAF9F6;
+  --color-brand-beige-100: #F4F3EE;
+  --color-brand-beige-200: #EADAC9;
+  --color-brand-beige-300: #D8C4B6;
+  --color-brand-clay-500: #F97316;
+  --color-brand-clay-600: #EA580C;
+  --color-brand-clay-700: #C2410C;
+  --color-brand-dark-800: #292524;
+  --color-brand-dark-900: #1C1917;
+  --color-brand-dark-950: #0C0A09;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-brand-beige-50);
+    color: var(--color-brand-dark-900);
+    font-family: var(--font-sans);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-brand-beige-100);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-beige-300);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-clay-500);
+}
+
+/* Clean professional geometric lines instead of plaster texture */
+.bg-plaster-texture {
+  background-image: radial-gradient(rgba(249, 115, 22, 0.03) 1px, transparent 0);
+  background-size: 16px 16px;
+}

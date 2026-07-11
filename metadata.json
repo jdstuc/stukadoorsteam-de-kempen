@@ -1,0 +1,6 @@
+{
+  "name": "Stukadoorsteam De Kempen",
+  "description": "Website voor Stukadoorsteam De Kempen. Professionele stukadoors in de Kempen met een handige online offerte-calculator en interactieve AI StucAdviseur.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

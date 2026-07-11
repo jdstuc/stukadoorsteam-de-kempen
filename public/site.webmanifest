@@ -1,0 +1,25 @@
+{
+  "name": "Stukadoorsteam De Kempen",
+  "short_name": "De Kempen",
+  "description": "Lokale stukadoors voor glad pleisterwerk, schuurwerk, renovatiestucwerk en betonlook binnen 20 km van Bergeijk.",
+  "lang": "nl-NL",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#faf9f6",
+  "theme_color": "#1e3a8a",
+  "icons": [
+    {
+      "src": "/logo-stukadoorsteam-de-kempen.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-stukadoorsteam-de-kempen.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
