@@ -228,6 +228,15 @@ app.get(["/stukadoor-begeijk", "/stucadoor-begeijk"], (_req, res) => {
 });
 
 app.use((req, res, next) => {
+  const host = (req.get("host") || "").split(":")[0].toLowerCase();
+  if (host === "stukadoorsteamdekempen.nl") {
+    return res.redirect(301, `https://www.stukadoorsteamdekempen.nl${req.originalUrl}`);
+  }
+
+  next();
+});
+
+app.use((req, res, next) => {
   if (req.path === "/" || req.path.includes(".")) {
     return next();
   }
@@ -298,11 +307,18 @@ function renderAlternateLinks(url: string): string {
     <link rel="alternate" hreflang="x-default" href="${url}" />`;
 }
 
-function renderSocialImageMeta(): string {
+function renderSocialImageMeta(title?: string, description?: string): string {
+  const safeTitle = title ? escapeHtml(title) : "Stukadoorsteam De Kempen";
+  const safeDescription = description
+    ? escapeHtml(description)
+    : "Lokale stukadoors voor glad pleisterwerk, schuurwerk, renovatiestucwerk en betonlook in de Kempen.";
+
   return `<meta property="og:image" content="${LOGO_URL}" />
     <meta property="og:image:alt" content="Logo Stukadoorsteam De Kempen - vakwerk door teamwork" />
     <meta property="og:site_name" content="Stukadoorsteam De Kempen" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${safeTitle}" />
+    <meta name="twitter:description" content="${safeDescription}" />
     <meta name="twitter:image" content="${LOGO_URL}" />`;
 }
 
@@ -398,6 +414,67 @@ function getNearbyCityPages(currentCity: string): typeof LOCAL_LANDING_PAGES {
   return nearby;
 }
 
+function renderLocalPlaceJsonLd(page: typeof LOCAL_LANDING_PAGES[number], url: string): string {
+  const citySlug = page.slug.replace("stukadoor-", "");
+  return `<script type="application/ld+json">${JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": `${url}#localbusiness-place`,
+    name: `Stukadoorsteam De Kempen - ${page.city}`,
+    url,
+    image: LOGO_URL,
+    logo: LOGO_URL,
+    telephone: "+31 497 123 456",
+    email: "info@stukadoorsteamdekempen.nl",
+    parentOrganization: {
+      "@type": "LocalBusiness",
+      "@id": `${BASE_URL}/#localbusiness`,
+      name: "Stukadoorsteam De Kempen",
+    },
+    areaServed: {
+      "@type": "Place",
+      name: page.city,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: page.city,
+        addressRegion: "Noord-Brabant",
+        addressCountry: "NL",
+      },
+    },
+    makesOffer: SERVICE_LANDING_PAGES.map((service) => ({
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: `${service.name} ${page.city}`,
+        url: `${BASE_URL}/${service.slug}-${citySlug}`,
+      },
+    })),
+  })}</script>`;
+}
+
+function renderOfferCatalogJsonLd(): string {
+  return `<script type="application/ld+json">${JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "OfferCatalog",
+    name: "Stukadoor prijzen Stukadoorsteam De Kempen",
+    url: `${BASE_URL}/stukadoor-prijzen`,
+    itemListElement: SERVICE_LANDING_PAGES.map((page, index) => ({
+      "@type": "Offer",
+      position: index + 1,
+      itemOffered: {
+        "@type": "Service",
+        name: page.name,
+        url: `${BASE_URL}/${page.slug}`,
+      },
+      priceSpecification: {
+        "@type": "PriceSpecification",
+        priceCurrency: "EUR",
+        description: page.price,
+      },
+    })),
+  })}</script>`;
+}
+
 function renderNearbyCityLinks(currentCity: string): string {
   return getNearbyCityPages(currentCity)
     .map((page) => `<a href="/${page.slug}">Stukadoor ${escapeHtml(page.city)}</a>`)
@@ -427,7 +504,11 @@ function renderLocalLandingPage(page: typeof LOCAL_LANDING_PAGES[number]) {
     },
     {
       question: `Kan ik een richtprijs krijgen voor stucwerk in ${page.city}?`,
-      answer: "Ja, via de offertecalculator krijgt u snel een indicatie. Voor renovatie en betonlook kijken we graag mee op locatie.",
+      answer: "Ja, via de offertecalculator krijgt u snel een indicatie. Bekijk ook onze richtprijzen per dienst.",
+    },
+    {
+      question: `Hoe lang moet stucwerk drogen in ${page.city}?`,
+      answer: "Reken op ongeveer 1 dag droogtijd per millimeter laagdikte. Meer uitleg staat op onze pagina over stucwerk droogtijd.",
     },
   ];
 
@@ -442,7 +523,7 @@ function renderLocalLandingPage(page: typeof LOCAL_LANDING_PAGES[number]) {
     <link rel="canonical" href="${url}" />
     ${renderAlternateLinks(url)}
     ${renderSeoAssets()}
-    ${renderSocialImageMeta()}
+    ${renderSocialImageMeta(title, description)}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="nl_NL" />
     <meta property="og:title" content="${title}" />
@@ -465,6 +546,7 @@ function renderLocalLandingPage(page: typeof LOCAL_LANDING_PAGES[number]) {
         "areaServed": { "@type": "Place", "name": "${city}" }
       }
     </script>
+    ${renderLocalPlaceJsonLd(page, url)}
     ${renderWebPageJsonLd(title, description, url)}
     ${renderBreadcrumbJsonLd(breadcrumbItems)}
     ${renderFaqJsonLd(faqs)}
@@ -507,7 +589,7 @@ function renderLocalLandingPage(page: typeof LOCAL_LANDING_PAGES[number]) {
         <div class="grid">
           ${renderFaqCards(faqs)}
         </div>
-        <p><a href="/stukadoor-prijzen">Richtprijzen stucwerk</a> · <a href="/contact-stukadoor">Contact opnemen</a> · <a href="/stucwerk-droogtijd">Droogtijd stucwerk</a></p>
+        <p><a href="/stukadoor-prijzen">Richtprijzen stucwerk</a> · <a href="/contact-stukadoor">Contact opnemen</a> · <a href="/stucwerk-droogtijd">Droogtijd stucwerk</a> · <a href="/diensten">Alle diensten</a></p>
         <h2>Stukadoor in de buurt van ${city}</h2>
         <p>${renderNearbyCityLinks(page.city)}</p>
         <p><a href="/werkgebied">Alle stukadoor pagina's in werkgebied</a></p>
@@ -567,7 +649,7 @@ function renderServiceLandingPage(page: typeof SERVICE_LANDING_PAGES[number]) {
     <link rel="canonical" href="${url}" />
     ${renderAlternateLinks(url)}
     ${renderSeoAssets()}
-    ${renderSocialImageMeta()}
+    ${renderSocialImageMeta(title, description)}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="nl_NL" />
     <meta property="og:title" content="${title}" />
@@ -651,7 +733,7 @@ function renderServiceLandingPage(page: typeof SERVICE_LANDING_PAGES[number]) {
         <div class="grid">
           ${renderFaqCards(faqs)}
         </div>
-        <p><a href="/diensten">Alle stucwerk diensten</a></p>
+        <p><a href="/diensten">Alle stucwerk diensten</a> · <a href="/stukadoor-prijzen">Richtprijzen</a> · <a href="/werkgebied">Werkgebied</a></p>
         ${renderSeoFooterNav()}
       </section>
     </main>
@@ -707,7 +789,7 @@ function renderComboLandingPage(page: typeof COMBO_LANDING_PAGES[number]) {
     <link rel="canonical" href="${url}" />
     ${renderAlternateLinks(url)}
     ${renderSeoAssets()}
-    ${renderSocialImageMeta()}
+    ${renderSocialImageMeta(title, description)}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="nl_NL" />
     <meta property="og:title" content="${title}" />
@@ -850,7 +932,7 @@ function renderHubPage({
     <link rel="canonical" href="${url}" />
     ${renderAlternateLinks(url)}
     ${renderSeoAssets()}
-    ${renderSocialImageMeta()}
+    ${renderSocialImageMeta(title, description)}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="nl_NL" />
     <meta property="og:title" content="${escapeHtml(title)}" />
@@ -981,7 +1063,7 @@ function renderStukadoorKempenPage() {
     <link rel="canonical" href="${url}" />
     ${renderAlternateLinks(url)}
     ${renderSeoAssets()}
-    ${renderSocialImageMeta()}
+    ${renderSocialImageMeta(title, description)}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="nl_NL" />
     <meta property="og:title" content="${title}" />
@@ -1099,7 +1181,7 @@ function renderStucwerkKempenPage() {
     <link rel="canonical" href="${url}" />
     ${renderAlternateLinks(url)}
     ${renderSeoAssets()}
-    ${renderSocialImageMeta()}
+    ${renderSocialImageMeta(title, description)}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="nl_NL" />
     <meta property="og:title" content="${title}" />
@@ -1186,7 +1268,7 @@ function renderSiteOverviewPage() {
     <link rel="canonical" href="${url}" />
     ${renderAlternateLinks(url)}
     ${renderSeoAssets()}
-    ${renderSocialImageMeta()}
+    ${renderSocialImageMeta(title, description)}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="nl_NL" />
     <meta property="og:title" content="${title}" />
@@ -1287,7 +1369,7 @@ function renderPricingPage() {
     <link rel="canonical" href="${url}" />
     ${renderAlternateLinks(url)}
     ${renderSeoAssets()}
-    ${renderSocialImageMeta()}
+    ${renderSocialImageMeta(title, description)}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="nl_NL" />
     <meta property="og:title" content="${title}" />
@@ -1295,6 +1377,7 @@ function renderPricingPage() {
     <meta property="og:url" content="${url}" />
     ${renderWebPageJsonLd(title, description, url)}
     ${renderBreadcrumbJsonLd(breadcrumbItems)}
+    ${renderOfferCatalogJsonLd()}
     ${renderFaqJsonLd(faqs)}
     <style>
       body{margin:0;font-family:Inter,Arial,sans-serif;background:#faf9f6;color:#1c1917;line-height:1.6}
@@ -1340,6 +1423,10 @@ app.get("/stukadoor-prijzen", (_req, res) => {
 });
 
 app.get("/offerte-stukadoor", (_req, res) => {
+  res.redirect(301, "/stukadoor-prijzen");
+});
+
+app.get("/stukadoor-offerte", (_req, res) => {
   res.redirect(301, "/stukadoor-prijzen");
 });
 
@@ -1413,7 +1500,7 @@ function renderAboutPage() {
     <link rel="canonical" href="${url}" />
     ${renderAlternateLinks(url)}
     ${renderSeoAssets()}
-    ${renderSocialImageMeta()}
+    ${renderSocialImageMeta(title, description)}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="nl_NL" />
     <meta property="og:title" content="${title}" />
@@ -1502,7 +1589,7 @@ function renderDryingTimePage() {
     <link rel="canonical" href="${url}" />
     ${renderAlternateLinks(url)}
     ${renderSeoAssets()}
-    ${renderSocialImageMeta()}
+    ${renderSocialImageMeta(title, description)}
     <meta property="og:type" content="article" />
     <meta property="og:locale" content="nl_NL" />
     <meta property="og:title" content="${title}" />
@@ -1642,7 +1729,7 @@ function renderContactPage() {
     <link rel="canonical" href="${url}" />
     ${renderAlternateLinks(url)}
     ${renderSeoAssets()}
-    ${renderSocialImageMeta()}
+    ${renderSocialImageMeta(title, description)}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="nl_NL" />
     <meta property="og:title" content="${title}" />

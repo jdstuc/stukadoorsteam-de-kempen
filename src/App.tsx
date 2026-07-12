@@ -272,30 +272,78 @@ const TARGET_SERVICE_AREAS = [
   },
 ];
 
-const SEO_FAQS = [
+const SEO_FAQS: { question: string; answer: React.ReactNode }[] = [
   {
     question: "Wat kost een stukadoor in de Kempen gemiddeld?",
-    answer: "Voor glad pleisterwerk ligt de richtprijs vaak tussen €15 en €25 per m². Schuurwerk ligt vaak tussen €18 en €28 per m² en betonlook/microcement is maatwerk. De exacte prijs hangt af van ondergrond, oppervlakte, hoeken, plafonds en voorbereiding.",
+    answer: (
+      <>
+        Voor glad pleisterwerk ligt de richtprijs vaak tussen €15 en €25 per m². Schuurwerk ligt vaak tussen €18 en €28 per m² en betonlook/microcement is maatwerk. Bekijk onze{" "}
+        <a href="/stukadoor-prijzen" className="text-brand-clay-600 font-semibold hover:underline">
+          richtprijzen per dienst
+        </a>
+        .
+      </>
+    ),
   },
   {
     question: "Werken jullie binnen 20 km van Bergeijk?",
-    answer: "Ja, wij richten ons vooral op stucwerk binnen ongeveer 20 km van Bergeijk, waaronder Westerhoven, Luyksgestel, Eersel, Valkenswaard, Duizel, Hapert, Steensel, Riethoven, Dommelen, Waalre, Veldhoven, Bladel, Reusel, Lommel en Pelt.",
+    answer: (
+      <>
+        Ja, wij richten ons vooral op stucwerk binnen ongeveer 20 km van Bergeijk. Bekijk ons volledige{" "}
+        <a href="/werkgebied" className="text-brand-clay-600 font-semibold hover:underline">
+          werkgebied
+        </a>{" "}
+        met lokale pagina&apos;s per plaats.
+      </>
+    ),
   },
   {
     question: "Hoe lang moet stucwerk drogen voordat er geschilderd kan worden?",
-    answer: "Gemiddeld droogt stucwerk ongeveer 1 dag per millimeter laagdikte bij goede ventilatie en normale temperatuur. Wacht met schilderen tot het stucwerk volledig licht en droog is.",
+    answer: (
+      <>
+        Gemiddeld droogt stucwerk ongeveer 1 dag per millimeter laagdikte bij goede ventilatie en normale temperatuur. Meer uitleg staat op onze pagina over{" "}
+        <a href="/stucwerk-droogtijd" className="text-brand-clay-600 font-semibold hover:underline">
+          stucwerk droogtijd
+        </a>
+        .
+      </>
+    ),
   },
   {
     question: "Kunnen jullie ook nieuwbouwwoningen strak pleisteren?",
-    answer: "Ja, wij kunnen nieuwbouwwoningen strak pleisteren en sausklaar afwerken. We kijken per ondergrond welke aanpak het beste past.",
+    answer: (
+      <>
+        Ja, wij kunnen nieuwbouwwoningen strak pleisteren en sausklaar afwerken. Bekijk{" "}
+        <a href="/glad-pleisterwerk" className="text-brand-clay-600 font-semibold hover:underline">
+          glad pleisterwerk
+        </a>{" "}
+        voor meer informatie.
+      </>
+    ),
   },
   {
     question: "Doen jullie ook renovatiestucwerk in bestaande woningen?",
-    answer: "Ja, wij herstellen en pleisteren bestaande wanden en plafonds bij verbouwingen en renovaties. De beste aanpak hangt af van de staat van de ondergrond.",
+    answer: (
+      <>
+        Ja, wij herstellen en pleisteren bestaande wanden en plafonds bij verbouwingen en renovaties. Meer over{" "}
+        <a href="/renovatiestucwerk" className="text-brand-clay-600 font-semibold hover:underline">
+          renovatiestucwerk
+        </a>
+        .
+      </>
+    ),
   },
   {
     question: "Maken jullie betonlook badkamers en microcement?",
-    answer: "Ja, betonlook en microcement zijn geschikt voor badkamers, keukens en accentwanden. Dit is maatwerk, dus we adviseren graag op locatie.",
+    answer: (
+      <>
+        Ja, betonlook en microcement zijn geschikt voor badkamers, keukens en accentwanden. Bekijk{" "}
+        <a href="/betonlook-badkamer" className="text-brand-clay-600 font-semibold hover:underline">
+          betonlook badkamer
+        </a>{" "}
+        of neem contact op voor advies op locatie.
+      </>
+    ),
   },
 ];
 
