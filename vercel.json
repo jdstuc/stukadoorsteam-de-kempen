@@ -1,21 +1,16 @@
 {
   "version": 2,
-  "buildCommand": "npm run build:production",
-  "installCommand": "npm install",
   "builds": [
     {
-      "src": "server.ts",
-      "use": "@vercel/node",
+      "src": "package.json",
+      "use": "@vercel/static-build",
       "config": {
-        "includeFiles": [
-          "public/**",
-          "dist/**"
-        ]
+        "distDir": "dist"
       }
     },
     {
-      "src": "public/**",
-      "use": "@vercel/static"
+      "src": "server.ts",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
