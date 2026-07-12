@@ -1969,14 +1969,26 @@ function configureProductionAssets() {
     return;
   }
 
+  const publicPath = path.join(process.cwd(), "public");
   const distPath = path.join(process.cwd(), "dist");
+  const indexCandidates = [
+    path.join(publicPath, "index.html"),
+    path.join(distPath, "index.html"),
+  ];
+
+  app.use(express.static(publicPath));
   app.use(express.static(distPath));
   app.get("*", (req, res, next) => {
     if (req.path.startsWith("/api/")) {
       return next();
     }
 
-    res.sendFile(path.join(distPath, "index.html"), (error) => {
+    const indexPath = indexCandidates.find((candidate) => fs.existsSync(candidate));
+    if (!indexPath) {
+      return next();
+    }
+
+    res.sendFile(indexPath, (error) => {
       if (error) {
         next(error);
       }
