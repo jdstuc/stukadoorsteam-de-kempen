@@ -1255,29 +1255,18 @@ export default function App() {
                     <div className="bg-gradient-to-br from-brand-beige-100 to-white rounded-3xl p-6 shadow-sm border border-brand-beige-200 flex flex-col justify-between space-y-4 hover:shadow-md transition-shadow">
                       <div>
                         <div className="h-10 w-10 rounded-xl bg-brand-clay-500 text-white flex items-center justify-center mb-4">
-                          <Euro className="w-5 h-5" />
+                          <Calculator className="w-5 h-5" />
                         </div>
-                        <h3 className="font-display font-bold text-lg text-brand-dark-900">Richtprijzen</h3>
-                        <div className="space-y-2 mt-3">
-                          <div className="flex justify-between text-xs text-brand-dark-800 border-b border-brand-beige-200 pb-1.5">
-                            <span>Glad Pleisterwerk</span>
-                            <span className="font-semibold text-brand-clay-700">v.a. €15 / m²</span>
-                          </div>
-                          <div className="flex justify-between text-xs text-brand-dark-800 border-b border-brand-beige-200 pb-1.5">
-                            <span>Schuurwerk</span>
-                            <span className="font-semibold text-brand-clay-700">v.a. €18 / m²</span>
-                          </div>
-                          <div className="flex justify-between text-xs text-brand-dark-800 pb-1">
-                            <span>Renovatiepleisterwerk</span>
-                            <span className="font-semibold text-brand-clay-700">op maat</span>
-                          </div>
-                        </div>
+                        <h3 className="font-display font-bold text-lg text-brand-dark-900">Offerte berekenen</h3>
+                        <p className="text-xs text-brand-dark-800 leading-relaxed mt-3">
+                          Gebruik onze online calculator voor een live prijsindicatie. Daarna kunt u direct een vrijblijvende offerte aanvragen.
+                        </p>
                       </div>
                       <button
-                        onClick={() => { setActiveTab("services"); window.scrollTo({top:0, behavior:'smooth'}); }}
+                        onClick={() => { setActiveTab("calculator"); window.scrollTo({top:0, behavior:'smooth'}); }}
                         className="text-brand-clay-600 hover:text-brand-clay-700 text-xs font-semibold flex items-center gap-1 group"
                       >
-                        <span>Bekijk alle tarieven</span>
+                        <span>Offerte berekenen</span>
                         <ChevronRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
                       </button>
                     </div>
@@ -1569,33 +1558,22 @@ export default function App() {
                       </button>
                     </div>
 
-                    {/* CARD 4: Quick Prices Calculator Preview (1 col) */}
+                    {/* CARD 4: Offerte calculator (1 col) */}
                     <div className="bg-gradient-to-br from-brand-dark-900 to-brand-dark-950 border border-brand-dark-800 rounded-3xl p-6 shadow-2xl flex flex-col justify-between space-y-4">
                       <div>
                         <div className="h-10 w-10 rounded-xl bg-brand-clay-500 text-white flex items-center justify-center mb-4">
-                          <Euro className="w-5 h-5" />
+                          <Calculator className="w-5 h-5" />
                         </div>
-                        <h3 className="font-display font-bold text-lg text-white">Richtprijzen</h3>
-                        <div className="space-y-2 mt-3">
-                          <div className="flex justify-between text-xs text-brand-beige-100 border-b border-brand-dark-800 pb-1.5 opacity-90">
-                            <span>Glad Pleisterwerk</span>
-                            <span className="font-semibold text-brand-clay-400">v.a. €15 / m²</span>
-                          </div>
-                          <div className="flex justify-between text-xs text-brand-beige-100 border-b border-brand-dark-800 pb-1.5 opacity-90">
-                            <span>Renovatiepleisterwerk</span>
-                            <span className="font-semibold text-brand-clay-400">v.a. €12 / m²</span>
-                          </div>
-                          <div className="flex justify-between text-xs text-brand-beige-100 pb-1 opacity-90">
-                            <span>Schuurwerk</span>
-                            <span className="font-semibold text-brand-clay-400">v.a. €9 / m²</span>
-                          </div>
-                        </div>
+                        <h3 className="font-display font-bold text-lg text-white">Offerte berekenen</h3>
+                        <p className="text-xs text-brand-beige-100 leading-relaxed mt-3 opacity-90">
+                          Gebruik onze online calculator voor een live prijsindicatie en vraag direct een offerte aan.
+                        </p>
                       </div>
                       <button
-                        onClick={() => { setActiveTab("services"); window.scrollTo({top:0, behavior:'smooth'}); }}
+                        onClick={() => { setActiveTab("calculator"); window.scrollTo({top:0, behavior:'smooth'}); }}
                         className="text-brand-clay-400 hover:text-brand-clay-300 text-xs font-semibold flex items-center gap-1 group"
                       >
-                        <span>Bekijk alle tarieven</span>
+                        <span>Offerte berekenen</span>
                         <ChevronRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
                       </button>
                     </div>
