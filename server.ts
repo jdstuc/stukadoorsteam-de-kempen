@@ -180,6 +180,12 @@ const SERVICE_LANDING_PAGES = [
     intro: "Betonlook en microcement geven badkamers, keukens en accentwanden een luxe, naadloze uitstraling.",
     price: "Richtprijs: €95 - €140 per m²",
   },
+  {
+    slug: "stucwerk-nieuwbouw",
+    name: "Stucwerk nieuwbouw",
+    intro: "Nieuwbouwwoningen strak pleisteren en sausklaar afwerken voor wanden en plafonds in de Kempen.",
+    price: "Richtprijs: €15 - €25 per m²",
+  },
 ];
 
 const BASE_URL = "https://www.stukadoorsteamdekempen.nl";
@@ -842,6 +848,7 @@ function renderComboLandingPage(page: typeof COMBO_LANDING_PAGES[number]) {
       <section>
         <h2>${serviceName} laten uitvoeren in ${city}</h2>
         <p>Stukadoorsteam De Kempen helpt met ${serviceName.toLowerCase()} in ${city} en omliggende plaatsen binnen ongeveer 20 km van Bergeijk. U werkt direct met Jeroen, Bram en Kay: korte lijnen, duidelijke afspraken en nette oplevering.</p>
+        <p>Veel klanten in ${city} schakelen ons in voor ${serviceName.toLowerCase()} bij nieuwbouw, verbouwing of renovatie. Wij komen graag langs voor advies op locatie.</p>
         <div class="grid">
           <article class="card"><strong>Advies op locatie</strong><br />We beoordelen ondergrond, oppervlakte, hoeken en gewenste afwerking.</article>
           <article class="card"><strong>Heldere richtprijs</strong><br />U krijgt vooraf duidelijkheid over m²-prijs, uurtarief of maatwerk.</article>
@@ -1313,6 +1320,10 @@ app.get("/pleisterwerk", (_req, res) => {
   res.redirect(301, "/glad-pleisterwerk");
 });
 
+app.get("/nieuwbouw-stucwerk", (_req, res) => {
+  res.redirect(301, "/stucwerk-nieuwbouw");
+});
+
 app.get("/site-overzicht", (_req, res) => {
   res.type("html").send(renderSiteOverviewPage());
 });
@@ -1753,20 +1764,24 @@ function renderContactPage() {
       ${renderBreadcrumbNav(breadcrumbItems)}
       <section class="hero">
         <div class="label">Direct contact met Jeroen, Bram en Kay</div>
-        <h1>Contact stukadoor</h1>
-        <p>Vraag advies, plan een afspraak of bereken online een richtprijs voor stucwerk in de Kempen.</p>
-        <a class="cta" href="/?tab=contact">Stuur een bericht</a>
+        <h1>Contact stukadoor in de Kempen</h1>
+        <p>Vraag advies, plan een afspraak of bereken online een offerte voor stucwerk binnen 20 km van Bergeijk.</p>
+        <a class="cta" href="/?tab=calculator">Offerte berekenen</a>
       </section>
       <section>
         <h2>Bel of mail ons</h2>
         <div class="grid">
           <article class="card"><strong>Telefoon</strong><br /><a href="tel:+31497123456">0497 - 123 456</a></article>
           <article class="card"><strong>E-mail</strong><br /><a href="mailto:info@stukadoorsteamdekempen.nl">info@stukadoorsteamdekempen.nl</a></article>
-          <article class="card"><strong>Online richtprijs</strong><br /><a href="/?tab=calculator">Offertecalculator</a></article>
+          <article class="card"><strong>Werkgebied</strong><br /><a href="/werkgebied">17 plaatsen in de Kempen</a></article>
         </div>
+        <h2>Ons werkgebied</h2>
+        <p>Wij werken vanuit Bergeijk in o.a. ${SERVED_CITIES.slice(0, 8).join(", ")} en omliggende dorpen.</p>
+        <p><a href="https://www.google.com/maps/search/?api=1&query=Bergeijk,+Noord-Brabant,+Nederland" target="_blank" rel="noopener noreferrer">Bekijk ons werkgebied op Google Maps</a></p>
+        <iframe title="Werkgebied Stukadoorsteam De Kempen rond Bergeijk" src="https://maps.google.com/maps?q=Bergeijk,+Nederland&z=10&output=embed" width="100%" height="320" style="border:0;border-radius:20px;margin-top:16px" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         <h2>Veelgestelde vragen over contact</h2>
         <div class="grid">${renderFaqCards(faqs)}</div>
-        <p><a href="/stukadoor-prijzen">Bekijk richtprijzen</a> · <a href="/werkgebied">Bekijk werkgebied</a> · <a href="/diensten">Bekijk diensten</a></p>
+        <p><a href="/?tab=calculator">Offerte berekenen</a> · <a href="/werkgebied">Bekijk werkgebied</a> · <a href="/diensten">Bekijk diensten</a></p>
         ${renderSeoFooterNav()}
       </section>
     </main>
@@ -1934,7 +1949,7 @@ Jouw doel is om bezoekers op de website te adviseren over al hun stucwerk-vragen
 
 Belangrijke bedrijfsinformatie:
 - Team: Jeroen (expert in glad pleisterwerk & betonlook), Bram (specialist in renovatie & strak pleisterwerk), Kay (meester in schuurwerk & decoratieve afwerking).
-- Regio: Ze werken in de hele Kempen (o.a. Bladel, Reusel, Eersel, Bergeijk, Valkenswaard, Hilvarenbeek, Oirschot, Hapert, Luyksgestel, Hoogeloon).
+- Regio: Ze werken binnen ongeveer 20 km van Bergeijk in: Bergeijk, Westerhoven, Luyksgestel, Eersel, Valkenswaard, Duizel, Hapert, Steensel, Bladel, Reusel, Lommel, Pelt, Riethoven, Dommelen, Borkel en Schaft, Waalre en Veldhoven.
 - Diensten:
   1. Glad Pleisterwerk (wanden & plafonds saus- of behangklaar maken) -> richtprijs €15 - €25 per m²
   2. Schuurwerk (decoratief met mooie draaiende cirkels, vochtregulerend, ideaal voor badkamers/plafonds) -> richtprijs €18 - €28 per m²

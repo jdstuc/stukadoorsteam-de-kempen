@@ -18,24 +18,7 @@ import {
   calculateAdvancedQuote,
   formatCurrency,
 } from "./advancedQuote";
-
-const KEMPEN_CITIES = [
-  "Bladel",
-  "Eersel",
-  "Reusel",
-  "Bergeijk",
-  "Valkenswaard",
-  "Hapert",
-  "Luyksgestel",
-  "Hoogeloon",
-  "Hilvarenbeek",
-  "Oirschot",
-  "Knegsel",
-  "Steensel",
-  "Vessem",
-  "Duizel",
-  "Wintelre",
-];
+import { KEMPEN_CITIES } from "./kempenCities";
 
 const initialQuoteData: AdvancedQuoteData = {
   clientName: "",

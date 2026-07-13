@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { PlasterService, TeamMember, QuoteRequest, ChatMessage, Review } from "./types";
 import { AdvancedQuoteCalculator } from "./AdvancedQuoteCalculator";
+import { KEMPEN_CITIES, KEMPEN_CITIES_SEO_TEXT, LOCAL_SEO_CITY_SLUGS } from "./kempenCities";
 import { BrandImage } from "./BrandImage";
 
 const IMAGES = {
@@ -213,32 +214,7 @@ const REVIEWS: Review[] = [
   }
 ];
 
-// Kempen Cities for SEO & targeting
-const KEMPEN_CITIES = [
-  "Bergeijk", "Westerhoven", "Luyksgestel", "Eersel", "Valkenswaard",
-  "Duizel", "Hapert", "Steensel", "Bladel", "Reusel",
-  "Lommel", "Pelt", "Riethoven", "Dommelen", "Borkel en Schaft", "Waalre", "Veldhoven",
-];
-
-const LOCAL_SEO_CITY_SLUGS: Record<string, string> = {
-  Bergeijk: "bergeijk",
-  Westerhoven: "westerhoven",
-  Luyksgestel: "luyksgestel",
-  Eersel: "eersel",
-  Valkenswaard: "valkenswaard",
-  Duizel: "duizel",
-  Hapert: "hapert",
-  Steensel: "steensel",
-  Lommel: "lommel",
-  Pelt: "pelt",
-  Riethoven: "riethoven",
-  Dommelen: "dommelen",
-  "Borkel en Schaft": "borkel-en-schaft",
-  Waalre: "waalre",
-  Veldhoven: "veldhoven",
-  Bladel: "bladel",
-  Reusel: "reusel",
-};
+// Kempen Cities for SEO & targeting — see kempenCities.ts
 
 const TARGET_SERVICE_AREAS = [
   {
@@ -355,6 +331,10 @@ const SEO_FAQS: { question: string; answer: React.ReactNode }[] = [
         Ja, wij kunnen nieuwbouwwoningen strak pleisteren en sausklaar afwerken. Bekijk{" "}
         <a href="/glad-pleisterwerk" className="text-brand-clay-600 font-semibold hover:underline">
           glad pleisterwerk
+        </a>{" "}
+        en{" "}
+        <a href="/stucwerk-nieuwbouw" className="text-brand-clay-600 font-semibold hover:underline">
+          stucwerk nieuwbouw
         </a>{" "}
         voor meer informatie.
       </>
@@ -496,7 +476,7 @@ export default function App() {
     const pageMeta: Record<ActiveTab, { title: string; description: string }> = {
       home: {
         title: "Stukadoor binnen 20 km van Bergeijk | Eersel, Valkenswaard, Luyksgestel",
-        description: "Stukadoorsteam De Kempen werkt binnen 20 km van Bergeijk: Westerhoven, Luyksgestel, Eersel, Valkenswaard, Duizel, Hapert, Steensel, Lommel, Pelt, Riethoven, Dommelen, Waalre, Veldhoven, Bladel en Reusel.",
+        description: `Stukadoorsteam De Kempen werkt binnen 20 km van Bergeijk: ${KEMPEN_CITIES_SEO_TEXT}.`,
       },
       services: {
         title: "Stucwerk diensten | Glad pleisterwerk, schuurwerk en betonlook",
@@ -1219,11 +1199,11 @@ export default function App() {
                           <span>Binnen 20 km van Bergeijk</span>
                         </div>
                         <h1 className="font-display font-black text-4xl sm:text-6xl lg:text-7xl leading-none tracking-tighter">
-                          Stukadoorsteam <br/>
-                          <span className="text-brand-clay-500">De Kempen</span>
+                          Stukadoor in <br/>
+                          <span className="text-brand-clay-500">de Kempen</span>
                         </h1>
                         <p className="text-brand-beige-200 text-sm sm:text-base max-w-xl leading-relaxed">
-                          Jeroen, Bram & Kay leveren strak stucwerk in Bergeijk, Westerhoven, Luyksgestel, Eersel, Valkenswaard, Duizel, Hapert, Steensel en omliggende dorpen.
+                          Jeroen, Bram & Kay leveren strak stucwerk binnen 20 km van Bergeijk — o.a. Eersel, Valkenswaard, Bladel, Reusel, Lommel, Pelt en Borkel en Schaft.
                         </p>
                       </div>
 
@@ -2817,9 +2797,9 @@ export default function App() {
           <div id="section-contact" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 animate-fadeIn">
             <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
               <span className="text-xs font-semibold uppercase tracking-widest text-brand-clay-600 block">Neem contact op</span>
-              <h1 className="font-display font-bold text-3xl sm:text-4xl text-brand-dark-900">Vrijblijvend advies of afspraak plannen</h1>
+              <h1 className="font-display font-bold text-3xl sm:text-4xl text-brand-dark-900">Contact stukadoor in de Kempen</h1>
               <p className="text-brand-dark-800 text-base">
-                Hebt u vragen of wilt u dat we langskomen in Bladel, Eersel, Bergeijk of Reusel om uw muren te inspecteren? Vul het formulier in of bel ons direct!
+                Hebt u vragen of wilt u dat we langskomen in Bergeijk, Eersel, Valkenswaard, Bladel of Reusel? Vul het formulier in of bel ons direct!
               </p>
             </div>
 
@@ -2884,6 +2864,16 @@ export default function App() {
                       <span>Bezemschoon opleveren na de werkzaamheden</span>
                     </li>
                   </ul>
+                </div>
+
+                <div className="rounded-2xl overflow-hidden border border-brand-beige-200 shadow-sm">
+                  <iframe
+                    title="Werkgebied Stukadoorsteam De Kempen rond Bergeijk"
+                    src="https://maps.google.com/maps?q=Bergeijk,+Nederland&z=10&output=embed"
+                    className="w-full h-56"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
                 </div>
 
               </div>
@@ -3232,8 +3222,27 @@ export default function App() {
             <div className="space-y-4">
               <h4 className="font-display font-semibold text-white text-sm uppercase tracking-wider">Werkgebied Kempen</h4>
               <p className="text-xs text-brand-clay-300 leading-relaxed">
-                Wij zijn actief in: {KEMPEN_CITIES.join(", ")}.
+                Wij zijn actief in:{" "}
+                {KEMPEN_CITIES.map((city, index) => (
+                  <span key={city}>
+                    <a
+                      href={`/stukadoor-${LOCAL_SEO_CITY_SLUGS[city]}`}
+                      className="hover:text-white transition-colors"
+                    >
+                      {city}
+                    </a>
+                    {index < KEMPEN_CITIES.length - 1 ? ", " : "."}
+                  </span>
+                ))}
               </p>
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Bergeijk,+Noord-Brabant,+Nederland"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-xs text-brand-clay-400 hover:text-white transition-colors"
+              >
+                Bekijk ons werkgebied op Google Maps →
+              </a>
               <div className="bg-brand-dark-900 p-3 rounded-lg border border-brand-dark-800 text-center">
                 <span className="text-[10px] text-brand-clay-300 block">📞 Bellen of WhatsAppen:</span>
                 <a href="tel:+31497123456" className="text-sm font-bold text-white hover:text-brand-clay-500 block mt-1">0497 - 123 456</a>

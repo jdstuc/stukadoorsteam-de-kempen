@@ -7,6 +7,7 @@
 - Schuurwerk plafond: https://www.stukadoorsteamdekempen.nl/schuurwerk-plafond
 - Renovatiestucwerk: https://www.stukadoorsteamdekempen.nl/renovatiestucwerk
 - Betonlook badkamer: https://www.stukadoorsteamdekempen.nl/betonlook-badkamer
+- Stucwerk nieuwbouw: https://www.stukadoorsteamdekempen.nl/stucwerk-nieuwbouw
 
 ## Niet aangeboden
 - Spackspuiten
@@ -16,14 +17,34 @@
 - Homepage: https://www.stukadoorsteamdekempen.nl/
 - Stukadoor Kempen: https://www.stukadoorsteamdekempen.nl/stukadoor-kempen
 - Stucwerk Kempen: https://www.stukadoorsteamdekempen.nl/stucwerk-kempen
-- Site-overzicht: https://www.stukadoorsteamdekempen.nl/site-overzicht
 - Werkgebied: https://www.stukadoorsteamdekempen.nl/werkgebied
 - Diensten: https://www.stukadoorsteamdekempen.nl/diensten
 - Prijzen: https://www.stukadoorsteamdekempen.nl/stukadoor-prijzen
 - Contact: https://www.stukadoorsteamdekempen.nl/contact-stukadoor
 - Over ons: https://www.stukadoorsteamdekempen.nl/over-ons
 - Droogtijd: https://www.stukadoorsteamdekempen.nl/stucwerk-droogtijd
+- Offertecalculator: https://www.stukadoorsteamdekempen.nl/?tab=calculator
+
+## Stukadoor per plaats
+- Bergeijk: https://www.stukadoorsteamdekempen.nl/stukadoor-bergeijk
+- Westerhoven: https://www.stukadoorsteamdekempen.nl/stukadoor-westerhoven
+- Luyksgestel: https://www.stukadoorsteamdekempen.nl/stukadoor-luyksgestel
+- Eersel: https://www.stukadoorsteamdekempen.nl/stukadoor-eersel
+- Valkenswaard: https://www.stukadoorsteamdekempen.nl/stukadoor-valkenswaard
+- Duizel: https://www.stukadoorsteamdekempen.nl/stukadoor-duizel
+- Hapert: https://www.stukadoorsteamdekempen.nl/stukadoor-hapert
+- Steensel: https://www.stukadoorsteamdekempen.nl/stukadoor-steensel
+- Lommel: https://www.stukadoorsteamdekempen.nl/stukadoor-lommel
+- Pelt: https://www.stukadoorsteamdekempen.nl/stukadoor-pelt
+- Riethoven: https://www.stukadoorsteamdekempen.nl/stukadoor-riethoven
+- Dommelen: https://www.stukadoorsteamdekempen.nl/stukadoor-dommelen
+- Borkel en Schaft: https://www.stukadoorsteamdekempen.nl/stukadoor-borkel-en-schaft
+- Waalre: https://www.stukadoorsteamdekempen.nl/stukadoor-waalre
+- Veldhoven: https://www.stukadoorsteamdekempen.nl/stukadoor-veldhoven
+- Bladel: https://www.stukadoorsteamdekempen.nl/stukadoor-bladel
+- Reusel: https://www.stukadoorsteamdekempen.nl/stukadoor-reusel
 
 ## Contact
 - Telefoon: +31 497 123 456
 - E-mail: info@stukadoorsteamdekempen.nl
+- Werkgebied: Bergeijk en omliggende Kempen (ca. 20 km)
