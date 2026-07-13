@@ -184,6 +184,10 @@ const SERVICE_LANDING_PAGES = [
 
 const BASE_URL = "https://www.stukadoorsteamdekempen.nl";
 const LOGO_URL = `${BASE_URL}/logo-stukadoorsteam-de-kempen.png`;
+const OG_IMAGE_URL = `${BASE_URL}/images/hero_interior.jpg`;
+const SERVED_CITIES = LOCAL_LANDING_PAGES.map((page) => page.city);
+const SERVED_CITIES_JSON = JSON.stringify(SERVED_CITIES);
+const SITEMAP_LASTMOD = "2026-07-14";
 
 const COMBO_SERVICE_PAGES = SERVICE_LANDING_PAGES;
 const COMBO_LOCATION_PAGES = LOCAL_LANDING_PAGES;
@@ -275,11 +279,11 @@ function renderWebPageJsonLd(title: string, description: string, url: string): s
     name: title,
     description,
     url,
-    image: LOGO_URL,
+    image: OG_IMAGE_URL,
     primaryImageOfPage: {
       "@type": "ImageObject",
-      url: LOGO_URL,
-      caption: "Logo Stukadoorsteam De Kempen",
+      url: OG_IMAGE_URL,
+      caption: "Strak stucwerk door Stukadoorsteam De Kempen",
     },
     inLanguage: "nl-NL",
     isPartOf: {
@@ -294,10 +298,10 @@ function renderWebPageJsonLd(title: string, description: string, url: string): s
       name: "Stukadoorsteam De Kempen",
       url: BASE_URL,
       logo: LOGO_URL,
-      image: LOGO_URL,
+      image: OG_IMAGE_URL,
       telephone: "+31 497 123 456",
       email: "info@stukadoorsteamdekempen.nl",
-      areaServed: ["Bergeijk", "Eersel", "Valkenswaard", "Luyksgestel", "Westerhoven", "Hapert", "Steensel", "Lommel", "Pelt"],
+      areaServed: SERVED_CITIES,
     },
   })}</script>`;
 }
@@ -313,13 +317,13 @@ function renderSocialImageMeta(title?: string, description?: string): string {
     ? escapeHtml(description)
     : "Lokale stukadoors voor glad pleisterwerk, schuurwerk, renovatiestucwerk en betonlook in de Kempen.";
 
-  return `<meta property="og:image" content="${LOGO_URL}" />
-    <meta property="og:image:alt" content="Logo Stukadoorsteam De Kempen - vakwerk door teamwork" />
+  return `<meta property="og:image" content="${OG_IMAGE_URL}" />
+    <meta property="og:image:alt" content="Strak stucwerk in de Kempen door Stukadoorsteam De Kempen" />
     <meta property="og:site_name" content="Stukadoorsteam De Kempen" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${safeTitle}" />
     <meta name="twitter:description" content="${safeDescription}" />
-    <meta name="twitter:image" content="${LOGO_URL}" />`;
+    <meta name="twitter:image" content="${OG_IMAGE_URL}" />`;
 }
 
 function renderSeoAssets(): string {
@@ -669,17 +673,7 @@ function renderServiceLandingPage(page: typeof SERVICE_LANDING_PAGES[number]) {
           "telephone": "+31 497 123 456",
           "email": "info@stukadoorsteamdekempen.nl"
         },
-        "areaServed": [
-          "Bergeijk",
-          "Westerhoven",
-          "Luyksgestel",
-          "Eersel",
-          "Valkenswaard",
-          "Lommel",
-          "Pelt",
-          "Bladel",
-          "Reusel"
-        ],
+        "areaServed": ${SERVED_CITIES_JSON},
         "offers": {
           "@type": "Offer",
           "priceCurrency": "EUR",
@@ -1264,7 +1258,7 @@ function renderSiteOverviewPage() {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${title}</title>
     <meta name="description" content="${description}" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="noindex, follow" />
     <link rel="canonical" href="${url}" />
     ${renderAlternateLinks(url)}
     ${renderSeoAssets()}
@@ -1790,13 +1784,12 @@ app.get("/stukadoor-contact", (_req, res) => {
 
 function renderSitemapXml() {
   const baseUrl = "https://www.stukadoorsteamdekempen.nl";
-  const lastmod = new Date().toISOString().slice(0, 10);
+  const lastmod = SITEMAP_LASTMOD;
   const urls = [
     { loc: "/", priority: "1.0" },
     { loc: "/werkgebied", priority: "0.95" },
     { loc: "/stukadoor-kempen", priority: "0.95" },
     { loc: "/stucwerk-kempen", priority: "0.95" },
-    { loc: "/site-overzicht", priority: "0.7" },
     { loc: "/diensten", priority: "0.95" },
     { loc: "/over-ons", priority: "0.9" },
     { loc: "/stukadoor-prijzen", priority: "0.9" },

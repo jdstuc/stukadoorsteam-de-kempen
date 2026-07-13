@@ -398,6 +398,16 @@ const NAV_TABS: { id: ActiveTab; label: string }[] = [
   { id: "contact", label: "Contact & Aanvraag" }
 ];
 
+const TAB_FROM_QUERY: Record<string, ActiveTab> = {
+  home: "home",
+  services: "services",
+  team: "team",
+  calculator: "calculator",
+  reviews: "reviews",
+  contact: "contact",
+  admin: "admin",
+};
+
 const SERVICE_PAGE_SLUGS: Record<string, string> = {
   "glad-pleisterwerk": "glad-pleisterwerk",
   "betonlook": "betonlook-badkamer",
@@ -466,6 +476,15 @@ export default function App() {
     }
   }, [chatMessages, chatOpen]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get("tab");
+    if (tab && TAB_FROM_QUERY[tab]) {
+      setActiveTab(TAB_FROM_QUERY[tab]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, []);
+
   // Load quotes for admin if authenticated
   useEffect(() => {
     if (isAdminAuthenticated) {
@@ -508,6 +527,13 @@ export default function App() {
     const meta = pageMeta[activeTab];
     document.title = meta.title;
     document.querySelector('meta[name="description"]')?.setAttribute("content", meta.description);
+    document.querySelector('meta[property="og:title"]')?.setAttribute("content", meta.title);
+    document.querySelector('meta[property="og:description"]')?.setAttribute("content", meta.description);
+    document.querySelector('meta[name="twitter:title"]')?.setAttribute("content", meta.title);
+    document.querySelector('meta[name="twitter:description"]')?.setAttribute("content", meta.description);
+    document
+      .querySelector('meta[name="robots"]')
+      ?.setAttribute("content", activeTab === "admin" ? "noindex, nofollow" : "index, follow");
   }, [activeTab]);
 
   // Fetch admin quotes from API
@@ -2771,16 +2797,14 @@ export default function App() {
             <div className="mt-12 bg-brand-beige-100 rounded-3xl p-8 border border-brand-beige-300 text-center max-w-2xl mx-auto space-y-4">
               <h3 className="font-display font-bold text-xl text-brand-dark-900">Bent u een bestaande klant?</h3>
               <p className="text-sm text-brand-dark-800">
-                Laat een review achter op Google of deel uw ervaring met vrienden en familie in de Kempen. Mond-tot-mondreclame is voor ons als lokale ZZP'ers goud waard!
+                Laat uw ervaring weten via contact of mond-tot-mondreclame in de Kempen. Voor ons als lokale ZZP&apos;ers is dat goud waard!
               </p>
               <div className="pt-2">
                 <a
-                  href="https://google.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/contact-stukadoor"
                   className="bg-white hover:bg-brand-beige-50 text-brand-clay-700 font-bold px-6 py-3 rounded-xl border border-brand-beige-300 shadow-sm inline-flex items-center gap-2 text-sm"
                 >
-                  <span>Schrijf een Google Review</span>
+                  <span>Deel uw ervaring</span>
                   <ChevronRight className="w-4 h-4" />
                 </a>
               </div>
@@ -3208,7 +3232,7 @@ export default function App() {
             <div className="space-y-4">
               <h4 className="font-display font-semibold text-white text-sm uppercase tracking-wider">Werkgebied Kempen</h4>
               <p className="text-xs text-brand-clay-300 leading-relaxed">
-                Wij zijn actief in: Bergeijk, Westerhoven, Luyksgestel, Eersel, Valkenswaard, Duizel, Hapert, Steensel, Lommel, Pelt, Bladel en Reusel.
+                Wij zijn actief in: {KEMPEN_CITIES.join(", ")}.
               </p>
               <div className="bg-brand-dark-900 p-3 rounded-lg border border-brand-dark-800 text-center">
                 <span className="text-[10px] text-brand-clay-300 block">📞 Bellen of WhatsAppen:</span>
