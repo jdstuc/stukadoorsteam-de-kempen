@@ -4,6 +4,15 @@ import fs from "fs";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 import type { QuoteRequest } from "./src/types";
+import {
+  LOCAL_LANDING_PAGES,
+  REGION_RING_LABELS,
+  REGION_SEO_PAGES,
+  buildCitiesSeoText,
+  getCitySlug,
+  groupPagesByRing,
+  type LocalLandingPageData,
+} from "./seoRegion";
 
 dotenv.config();
 
@@ -135,25 +144,7 @@ if (!fs.existsSync(DB_FILE)) {
   saveQuotes([]);
 }
 
-const LOCAL_LANDING_PAGES = [
-  { slug: "stukadoor-bergeijk", city: "Bergeijk", intro: "Stukadoor nodig in Bergeijk? Jeroen, Bram en Kay leveren strak stucwerk voor woningen, verbouwingen en renovaties in Bergeijk en omliggende dorpen." },
-  { slug: "stukadoor-westerhoven", city: "Westerhoven", intro: "Voor stucwerk in Westerhoven komt Stukadoorsteam De Kempen graag langs voor advies, inmeten en een duidelijke richtprijs." },
-  { slug: "stukadoor-luyksgestel", city: "Luyksgestel", intro: "In Luyksgestel verzorgen wij glad pleisterwerk, schuurwerk en nette renovatie van wanden en plafonds." },
-  { slug: "stukadoor-eersel", city: "Eersel", intro: "Zoekt u een stukadoor in Eersel? Wij leveren sausklaar pleisterwerk, schuurwerk en betonlook met duidelijke afspraken." },
-  { slug: "stukadoor-valkenswaard", city: "Valkenswaard", intro: "Ook in Valkenswaard helpen wij met professioneel stucwerk, betonlook badkamers en complete wand- en plafondafwerking." },
-  { slug: "stukadoor-duizel", city: "Duizel", intro: "Voor woningen in Duizel bieden wij persoonlijk advies, heldere planning en strak afgewerkt stucwerk zonder onnodige voorrijkosten." },
-  { slug: "stukadoor-hapert", city: "Hapert", intro: "In Hapert helpen wij met glad pleisterwerk, schuurwerk en renovatiestucwerk voor kleine en grotere projecten." },
-  { slug: "stukadoor-steensel", city: "Steensel", intro: "Voor stucwerk in Steensel werkt u direct met lokale vakmannen die netjes werken en duidelijke afspraken maken." },
-  { slug: "stukadoor-lommel", city: "Lommel", intro: "Net over de grens in Lommel denken wij mee over strak stucwerk, renovatie, pleisterwerk en betonlook afwerking." },
-  { slug: "stukadoor-pelt", city: "Pelt", intro: "Voor Pelt en omgeving bieden wij advies en uitvoering voor glad pleisterwerk, schuurwerk en nette wand- en plafondafwerking." },
-  { slug: "stukadoor-riethoven", city: "Riethoven", intro: "In Riethoven verzorgen wij strak pleisterwerk, herstelwerk en plafonds voor particuliere woningen en renovaties." },
-  { slug: "stukadoor-dommelen", city: "Dommelen", intro: "Voor stucwerk in Dommelen leveren wij duidelijke offertes, nette afwerking en advies over droogtijd en schilderklaar opleveren." },
-  { slug: "stukadoor-borkel-en-schaft", city: "Borkel en Schaft", intro: "Ook in Borkel en Schaft komen wij langs voor glad stucwerk, schuurwerk en renovatie van wanden en plafonds." },
-  { slug: "stukadoor-waalre", city: "Waalre", intro: "Voor woningen in Waalre bieden wij professioneel pleisterwerk, schuurwerk en betonlook met een strakke planning." },
-  { slug: "stukadoor-veldhoven", city: "Veldhoven", intro: "In Veldhoven helpen wij met stucwerk voor nieuwbouw en verbouw, van sausklaar pleisterwerk tot complete plafondafwerking." },
-  { slug: "stukadoor-bladel", city: "Bladel", intro: "In Bladel verzorgen wij glad pleisterwerk, schuurwerk en betonlook voor woningen en verbouwingen." },
-  { slug: "stukadoor-reusel", city: "Reusel", intro: "Voor stucwerk in Reusel kunt u terecht voor advies op locatie, duidelijke prijzen en strak afgewerkte wanden." },
-];
+const SERVED_CITIES_SEO_TEXT = buildCitiesSeoText();
 
 const SERVICE_LANDING_PAGES = [
   {
@@ -227,11 +218,24 @@ for (const deprecatedPath of DEPRECATED_SERVICE_PATHS) {
 }
 
 for (const page of LOCAL_LANDING_PAGES) {
-  const citySlug = page.slug.replace("stukadoor-", "");
+  const citySlug = getCitySlug(page);
   app.get(`/stucadoor-${citySlug}`, (_req, res) => {
     res.redirect(301, `/${page.slug}`);
   });
+  app.get(`/stucwerk-${citySlug}`, (_req, res) => {
+    res.redirect(301, `/${page.slug}`);
+  });
+  app.get(`/stukadoor-in-${citySlug}`, (_req, res) => {
+    res.redirect(301, `/${page.slug}`);
+  });
+  app.get(`/pleisterwerk-${citySlug}`, (_req, res) => {
+    res.redirect(301, `/glad-pleisterwerk-${citySlug}`);
+  });
 }
+
+app.get(["/stukadoor-gezocht", "/pleisteren-rondom-bergeijk"], (_req, res) => {
+  res.redirect(301, "/stukadoor-gezocht-bergeijk");
+});
 
 app.get(["/stukadoor-begeijk", "/stucadoor-begeijk"], (_req, res) => {
   res.redirect(301, "/stukadoor-bergeijk");
@@ -353,6 +357,7 @@ function renderSeoFooterNav(): string {
   return `<nav class="seo-footer" aria-label="Gerelateerde pagina's">
         <p>
           <a href="/stukadoor-kempen">Stukadoor Kempen</a> ·
+          <a href="/stukadoor-rondom-bergeijk">Rondom Bergeijk</a> ·
           <a href="/werkgebied">Werkgebied</a> ·
           <a href="/diensten">Diensten</a> ·
           <a href="/stukadoor-prijzen">Prijzen</a> ·
@@ -411,17 +416,23 @@ function renderFaqCards(faqs: SeoFaq[]): string {
     .join("");
 }
 
-function getNearbyCityPages(currentCity: string): typeof LOCAL_LANDING_PAGES {
-  const currentIndex = LOCAL_LANDING_PAGES.findIndex((page) => page.city === currentCity);
-  if (currentIndex === -1) {
+function getNearbyCityPages(currentCity: string): LocalLandingPageData[] {
+  const currentPage = LOCAL_LANDING_PAGES.find((page) => page.city === currentCity);
+  if (!currentPage) {
     return [];
   }
 
-  const nearby: typeof LOCAL_LANDING_PAGES = [];
-  for (let offset = 1; offset <= 4; offset += 1) {
-    nearby.push(LOCAL_LANDING_PAGES[(currentIndex + offset) % LOCAL_LANDING_PAGES.length]);
-  }
-  return nearby;
+  return LOCAL_LANDING_PAGES.filter((page) => page.city !== currentCity)
+    .sort((left, right) => {
+      const leftDistance = Math.abs(left.distanceKm - currentPage.distanceKm);
+      const rightDistance = Math.abs(right.distanceKm - currentPage.distanceKm);
+      if (leftDistance !== rightDistance) {
+        return leftDistance - rightDistance;
+      }
+
+      return left.distanceKm - right.distanceKm;
+    })
+    .slice(0, 6);
 }
 
 function renderLocalPlaceJsonLd(page: typeof LOCAL_LANDING_PAGES[number], url: string): string {
@@ -491,15 +502,20 @@ function renderNearbyCityLinks(currentCity: string): string {
     .join(" · ");
 }
 
-function renderLocalLandingPage(page: typeof LOCAL_LANDING_PAGES[number]) {
+function renderLocalLandingPage(page: LocalLandingPageData) {
   const city = escapeHtml(page.city);
   const intro = escapeHtml(page.intro);
-  const citySlug = page.slug.replace("stukadoor-", "");
+  const citySlug = getCitySlug(page);
   const url = `${BASE_URL}/${page.slug}`;
+  const distanceLabel =
+    page.distanceKm === 0
+      ? "Centrum Bergeijk"
+      : `Ongeveer ${page.distanceKm} km van Bergeijk`;
   const title = `Stukadoor ${city} | Pleisterwerk, schuurwerk en betonlook`;
   const description = `Stukadoor in ${city} nodig? Stukadoorsteam De Kempen helpt met glad pleisterwerk, schuurwerk, renovatiestucwerk en betonlook binnen 20 km van Bergeijk.`;
   const breadcrumbItems = [
     { name: "Home", href: "/" },
+    { name: "Rondom Bergeijk", href: "/stukadoor-rondom-bergeijk" },
     { name: "Werkgebied", href: "/werkgebied" },
     { name: `Stukadoor ${page.city}`, href: `/${page.slug}` },
   ];
@@ -570,6 +586,7 @@ function renderLocalLandingPage(page: typeof LOCAL_LANDING_PAGES[number]) {
       .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:24px}
       .card{background:#fff;border:1px solid #e7e5e4;border-radius:20px;padding:20px}
       .breadcrumb{font-size:13px;margin-bottom:18px;display:flex;gap:8px;flex-wrap:wrap;color:#78716c}
+      .meta{color:#78716c;font-size:13px;margin-top:8px;display:block}
       .cta{display:inline-block;margin-top:24px;background:#f97316;color:#fff;padding:14px 20px;border-radius:14px;text-decoration:none;font-weight:800}
       a{color:#c2410c}
     </style>
@@ -579,18 +596,19 @@ function renderLocalLandingPage(page: typeof LOCAL_LANDING_PAGES[number]) {
     <main>
       ${renderBreadcrumbNav(breadcrumbItems)}
       <section class="hero">
-        <div class="label">Stukadoor binnen 20 km van Bergeijk</div>
+        <div class="label">${escapeHtml(distanceLabel)} · Stukadoor binnen 20 km van Bergeijk</div>
         <h1>Stukadoor ${city}</h1>
         <p>${intro}</p>
         <a class="cta" href="/?tab=calculator">Vrijblijvende offerte berekenen</a>
       </section>
       <section>
         <h2>Stucwerk in ${city}: strak, duidelijk en lokaal</h2>
-        <p>Stukadoorsteam De Kempen bestaat uit Jeroen, Bram en Kay. Wij werken voor particuliere woningen en renovaties in ${city} en de regio rond Bergeijk. U kunt bij ons terecht voor glad pleisterwerk, schuurwerk, renovatiestucwerk en betonlook.</p>
+        <p>Stukadoorsteam De Kempen bestaat uit Jeroen, Bram en Kay. Wij werken voor particuliere woningen en renovaties in ${city} en de regio rond Bergeijk. U kunt bij ons terecht voor glad pleisterwerk, schuurwerk, renovatiestucwerk, stucwerk nieuwbouw en betonlook.</p>
         <div class="grid">
           <article class="card"><strong>Glad pleisterwerk</strong><br />Strakke wanden en plafonds, sausklaar of behangklaar afgewerkt.<br /><a href="/glad-pleisterwerk-${citySlug}">Glad pleisterwerk in ${city}</a></article>
           <article class="card"><strong>Schuurwerk plafond</strong><br />Ambachtelijke plafondafwerking met een klassiek draaiend patroon.<br /><a href="/schuurwerk-plafond-${citySlug}">Schuurwerk in ${city}</a></article>
           <article class="card"><strong>Renovatiestucwerk</strong><br />Oude of beschadigde wanden weer strak, vlak en klaar voor schilderwerk.<br /><a href="/renovatiestucwerk-${citySlug}">Renovatiestucwerk in ${city}</a></article>
+          <article class="card"><strong>Stucwerk nieuwbouw</strong><br />Nieuwbouwwoningen strak pleisteren en sausklaar afwerken.<br /><a href="/stucwerk-nieuwbouw-${citySlug}">Stucwerk nieuwbouw in ${city}</a></article>
           <article class="card"><strong>Betonlook</strong><br />Luxe naadloze afwerking voor badkamer, keuken of accentwand.<br /><a href="/betonlook-badkamer-${citySlug}">Betonlook in ${city}</a></article>
         </div>
         <h2>Waarom kiezen voor Stukadoorsteam De Kempen?</h2>
@@ -602,7 +620,7 @@ function renderLocalLandingPage(page: typeof LOCAL_LANDING_PAGES[number]) {
         <p><a href="/stukadoor-prijzen">Richtprijzen stucwerk</a> · <a href="/contact-stukadoor">Contact opnemen</a> · <a href="/stucwerk-droogtijd">Droogtijd stucwerk</a> · <a href="/diensten">Alle diensten</a></p>
         <h2>Stukadoor in de buurt van ${city}</h2>
         <p>${renderNearbyCityLinks(page.city)}</p>
-        <p><a href="/werkgebied">Alle stukadoor pagina's in werkgebied</a></p>
+        <p><a href="/stukadoor-rondom-bergeijk">Alle plaatsen rondom Bergeijk</a> · <a href="/werkgebied">Werkgebied (${LOCAL_LANDING_PAGES.length} plaatsen)</a></p>
         ${renderSeoFooterNav()}
       </section>
     </main>
@@ -980,20 +998,150 @@ function renderHubPage({
 </html>`;
 }
 
+function renderRegionExpansionPage(page: (typeof REGION_SEO_PAGES)[number]) {
+  const url = `${BASE_URL}/${page.slug}`;
+  const breadcrumbItems = [
+    { name: "Home", href: "/" },
+    { name: "Werkgebied", href: "/werkgebied" },
+    { name: page.heading, href: `/${page.slug}` },
+  ];
+  const groups = groupPagesByRing();
+  const ringOrder: LocalLandingPageData["ring"][] = ["centrum", "dichtbij", "regio", "grens"];
+  const ringSections = ringOrder
+    .filter((ring) => groups[ring].length > 0)
+    .map((ring) => {
+      const sortedPages = [...groups[ring]].sort((left, right) => left.distanceKm - right.distanceKm);
+      const cards = sortedPages
+        .map(
+          (cityPage) =>
+            `<a class="card" href="/${cityPage.slug}"><strong>Stukadoor ${escapeHtml(cityPage.city)}</strong><br />${escapeHtml(cityPage.intro)}<span class="meta">± ${cityPage.distanceKm} km van Bergeijk</span></a>`
+        )
+        .join("");
+
+      return `<section>
+        <h2>${escapeHtml(REGION_RING_LABELS[ring])}</h2>
+        <div class="grid">${cards}</div>
+      </section>`;
+    })
+    .join("");
+  const serviceCards = SERVICE_LANDING_PAGES.map(
+    (servicePage) =>
+      `<a class="card" href="/${servicePage.slug}"><strong>${escapeHtml(servicePage.name)}</strong><br />${escapeHtml(servicePage.intro)}</a>`
+  ).join("");
+  const itemListJsonLd = `<script type="application/ld+json">${JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: page.title,
+    description: page.description,
+    url,
+    inLanguage: "nl-NL",
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: LOCAL_LANDING_PAGES.map((cityPage, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: `Stukadoor ${cityPage.city}`,
+        url: `${BASE_URL}/${cityPage.slug}`,
+      })),
+    },
+  })}</script>`;
+  const faqs = [
+    {
+      question: "In welke plaatsen rondom Bergeijk werken jullie als stukadoor?",
+      answer: `Wij werken in ${LOCAL_LANDING_PAGES.length} plaatsen binnen ongeveer 20 km van Bergeijk, waaronder ${SERVED_CITIES_SEO_TEXT}.`,
+    },
+    {
+      question: "Wat kost stucwerk rondom Bergeijk?",
+      answer:
+        "Via onze offertecalculator krijgt u snel een richtprijs. Glad pleisterwerk ligt vaak tussen €15 en €25 per m², schuurwerk tussen €18 en €28 per m².",
+    },
+    {
+      question: "Komen jullie ook in Belgische grensgemeenten?",
+      answer: "Ja, wij werken ook in Lommel, Pelt, Achel, Overpelt en Neerpelt binnen ons werkgebied rond Bergeijk.",
+    },
+  ];
+
+  return `<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${escapeHtml(page.title)}</title>
+    <meta name="description" content="${escapeHtml(page.description)}" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="${url}" />
+    ${renderAlternateLinks(url)}
+    ${renderSeoAssets()}
+    ${renderSocialImageMeta(page.title, page.description)}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="nl_NL" />
+    <meta property="og:title" content="${escapeHtml(page.title)}" />
+    <meta property="og:description" content="${escapeHtml(page.description)}" />
+    <meta property="og:url" content="${url}" />
+    ${renderWebPageJsonLd(page.title, page.description, url)}
+    ${renderBreadcrumbJsonLd(breadcrumbItems)}
+    ${itemListJsonLd}
+    ${renderFaqJsonLd(faqs)}
+    <style>
+      body{margin:0;font-family:Inter,Arial,sans-serif;background:#faf9f6;color:#1c1917;line-height:1.6}
+      main{max-width:1080px;margin:0 auto;padding:48px 20px}
+      .hero{background:#172554;color:#fff;border-radius:28px;padding:40px;box-shadow:0 24px 70px rgba(15,23,42,.18)}
+      .label{color:#fb923c;text-transform:uppercase;letter-spacing:.18em;font-size:12px;font-weight:800}
+      h1{font-size:clamp(40px,7vw,76px);line-height:.92;margin:14px 0 18px;letter-spacing:-.05em}
+      h2{font-size:28px;line-height:1.15;margin:36px 0 12px;color:#172554}
+      .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:24px}
+      .card{background:#fff;border:1px solid #e7e5e4;border-radius:20px;padding:20px;text-decoration:none;color:#1c1917}
+      .card strong{color:#172554}
+      .meta{color:#78716c;font-size:13px;margin-top:8px;display:block}
+      .breadcrumb{font-size:13px;margin-bottom:18px;display:flex;gap:8px;flex-wrap:wrap;color:#78716c}
+      .cta{display:inline-block;margin-top:24px;background:#f97316;color:#fff;padding:14px 20px;border-radius:14px;text-decoration:none;font-weight:800}
+      a{color:#c2410c}
+    </style>
+  </head>
+  <body>
+    ${renderSeoSiteHeader()}
+    <main>
+      ${renderBreadcrumbNav(breadcrumbItems)}
+      <section class="hero">
+        <div class="label">${escapeHtml(page.label)}</div>
+        <h1>${escapeHtml(page.heading)}</h1>
+        <p>${escapeHtml(page.intro)}</p>
+        <a class="cta" href="/?tab=calculator">Vrijblijvende offerte berekenen</a>
+      </section>
+      ${ringSections}
+      <section>
+        <h2>Stucwerk diensten rondom Bergeijk</h2>
+        <div class="grid">${serviceCards}</div>
+        <h2>Veelgestelde vragen</h2>
+        <div class="grid">${renderFaqCards(faqs)}</div>
+        <p><a href="/werkgebied">Werkgebied overzicht</a> · <a href="/stukadoor-kempen">Stukadoor Kempen</a> · <a href="/contact-stukadoor">Contact opnemen</a></p>
+        ${renderSeoFooterNav()}
+      </section>
+    </main>
+  </body>
+</html>`;
+}
+
+for (const page of REGION_SEO_PAGES) {
+  app.get(`/${page.slug}`, (_req, res) => {
+    res.type("html").send(renderRegionExpansionPage(page));
+  });
+}
+
 app.get("/werkgebied", (_req, res) => {
   res.type("html").send(
     renderHubPage({
       slug: "werkgebied",
       title: "Werkgebied stukadoor binnen 20 km van Bergeijk | Stukadoorsteam De Kempen",
       description:
-        "Bekijk het werkgebied van Stukadoorsteam De Kempen: Bergeijk, Westerhoven, Luyksgestel, Eersel, Valkenswaard, Lommel, Pelt en omliggende dorpen.",
+        `Bekijk het werkgebied van Stukadoorsteam De Kempen: ${SERVED_CITIES_SEO_TEXT}.`,
       label: "Werkgebied",
       heading: "Stukadoor per plaats",
       intro:
-        "Wij werken bewust lokaal rond Bergeijk, zodat we snel kunnen komen kijken en duidelijke afspraken maken over stucwerk, renovatie, schuurwerk en betonlook.",
-      links: LOCAL_LANDING_PAGES.map((page) => ({
-        name: `Stukadoor ${page.city}`,
-        href: `/${page.slug}`,
+        `Wij werken bewust lokaal rond Bergeijk in ${LOCAL_LANDING_PAGES.length} plaatsen binnen 20 km, zodat we snel kunnen komen kijken en duidelijke afspraken maken over stucwerk, renovatie, schuurwerk en betonlook.`,
+      links: LOCAL_LANDING_PAGES.map((localPage) => ({
+        name: `Stukadoor ${localPage.city}`,
+        href: `/${localPage.slug}`,
       })),
     })
   );
@@ -1036,7 +1184,7 @@ function renderStukadoorKempenPage() {
     {
       question: "In welke plaatsen werken jullie als stukadoor?",
       answer:
-        "Onder andere in Bergeijk, Westerhoven, Luyksgestel, Eersel, Valkenswaard, Duizel, Hapert, Steensel, Lommel, Pelt, Riethoven, Dommelen, Waalre, Veldhoven, Bladel en Reusel.",
+        `Onder andere in ${SERVED_CITIES_SEO_TEXT}.`,
     },
     {
       question: "Welke stucwerk diensten bieden jullie aan?",
@@ -1240,6 +1388,9 @@ function renderSiteOverviewPage() {
   ];
   const hubLinks = [
     { name: "Stukadoor Kempen", href: "/stukadoor-kempen" },
+    { name: "Stukadoor rondom Bergeijk", href: "/stukadoor-rondom-bergeijk" },
+    { name: "Stucwerk rondom Bergeijk", href: "/stucwerk-rondom-bergeijk" },
+    { name: "Stukadoor gezocht Bergeijk", href: "/stukadoor-gezocht-bergeijk" },
     { name: "Stucwerk Kempen", href: "/stucwerk-kempen" },
     { name: "Werkgebied", href: "/werkgebied" },
     { name: "Diensten", href: "/diensten" },
@@ -1773,7 +1924,8 @@ function renderContactPage() {
         <div class="grid">
           <article class="card"><strong>Telefoon</strong><br /><a href="tel:+31497123456">0497 - 123 456</a></article>
           <article class="card"><strong>E-mail</strong><br /><a href="mailto:info@stukadoorsteamdekempen.nl">info@stukadoorsteamdekempen.nl</a></article>
-          <article class="card"><strong>Werkgebied</strong><br /><a href="/werkgebied">17 plaatsen in de Kempen</a></article>
+          <article class="card"><strong>Werkgebied</strong><br /><a href="/werkgebied">${LOCAL_LANDING_PAGES.length} plaatsen in de Kempen</a></article>
+          <article class="card"><strong>Regio Bergeijk</strong><br /><a href="/stukadoor-rondom-bergeijk">Alle plaatsen rondom Bergeijk</a></article>
         </div>
         <h2>Ons werkgebied</h2>
         <p>Wij werken vanuit Bergeijk in o.a. ${SERVED_CITIES.slice(0, 8).join(", ")} en omliggende dorpen.</p>
@@ -1810,6 +1962,7 @@ function renderSitemapXml() {
     { loc: "/stukadoor-prijzen", priority: "0.9" },
     { loc: "/contact-stukadoor", priority: "0.9" },
     { loc: "/stucwerk-droogtijd", priority: "0.8" },
+    ...REGION_SEO_PAGES.map((page) => ({ loc: `/${page.slug}`, priority: page.priority })),
     ...LOCAL_LANDING_PAGES.map((page) => ({ loc: `/${page.slug}`, priority: "0.9" })),
     ...SERVICE_LANDING_PAGES.map((page) => ({ loc: `/${page.slug}`, priority: "0.85" })),
     ...COMBO_LANDING_PAGES.map((page) => ({ loc: `/${page.slug}`, priority: "0.7" })),

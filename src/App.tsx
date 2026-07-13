@@ -33,6 +33,7 @@ import {
 import { PlasterService, TeamMember, QuoteRequest, ChatMessage, Review } from "./types";
 import { AdvancedQuoteCalculator } from "./AdvancedQuoteCalculator";
 import { KEMPEN_CITIES, KEMPEN_CITIES_SEO_TEXT, LOCAL_SEO_CITY_SLUGS } from "./kempenCities";
+import { LOCAL_LANDING_PAGES } from "../seoRegion";
 import { BrandImage } from "./BrandImage";
 
 const IMAGES = {
@@ -216,76 +217,10 @@ const REVIEWS: Review[] = [
 
 // Kempen Cities for SEO & targeting — see kempenCities.ts
 
-const TARGET_SERVICE_AREAS = [
-  {
-    city: "Bergeijk",
-    text: "Stukadoor nodig in Bergeijk? Wij helpen met glad pleisterwerk, plafonds, renovatie en betonlook voor woningen in Bergeijk en omliggende dorpen.",
-  },
-  {
-    city: "Westerhoven",
-    text: "Voor stucwerk in Westerhoven komen Jeroen, Bram en Kay graag langs voor advies, inmeten en een duidelijke richtprijs.",
-  },
-  {
-    city: "Luyksgestel",
-    text: "In Luyksgestel verzorgen wij strak pleisterwerk, schuurwerk en renovatiestucwerk voor verbouw en renovatie.",
-  },
-  {
-    city: "Eersel",
-    text: "Zoekt u een stukadoor in Eersel? Wij leveren sausklaar pleisterwerk, schuurwerk en nette afwerking van wanden en plafonds.",
-  },
-  {
-    city: "Valkenswaard",
-    text: "Ook in Valkenswaard kunt u terecht voor professioneel stucwerk, betonlook badkamers en complete wand- en plafondafwerking.",
-  },
-  {
-    city: "Duizel",
-    text: "Voor woningen in Duizel bieden wij persoonlijk advies, heldere planning en strak afgewerkt stucwerk zonder onnodige voorrijkosten.",
-  },
-  {
-    city: "Hapert",
-    text: "In Hapert helpen wij met glad pleisterwerk, schuurwerk en renovatiestucwerk voor zowel kleine als grotere projecten.",
-  },
-  {
-    city: "Steensel",
-    text: "Voor stucwerk in Steensel werkt u direct met lokale vakmannen die netjes werken en duidelijke afspraken maken.",
-  },
-  {
-    city: "Riethoven",
-    text: "In Riethoven verzorgen wij strak pleisterwerk, herstelwerk en plafonds voor particuliere woningen en renovaties.",
-  },
-  {
-    city: "Dommelen",
-    text: "Voor stucwerk in Dommelen en omgeving leveren wij duidelijke offertes, nette afwerking en advies over droogtijd en schilderklaar opleveren.",
-  },
-  {
-    city: "Borkel en Schaft",
-    text: "Ook in Borkel en Schaft komen wij langs voor glad stucwerk, schuurwerk en renovatie van wanden en plafonds.",
-  },
-  {
-    city: "Waalre",
-    text: "Voor woningen in Waalre bieden wij professioneel pleisterwerk, schuurwerk en betonlook met een strakke planning.",
-  },
-  {
-    city: "Veldhoven",
-    text: "In Veldhoven helpen wij met stucwerk voor nieuwbouw en verbouw, van sausklaar pleisterwerk tot complete plafondafwerking.",
-  },
-  {
-    city: "Bladel",
-    text: "Ook in Bladel verzorgen wij glad pleisterwerk, schuurwerk en betonlook voor woningen en verbouwingen.",
-  },
-  {
-    city: "Reusel",
-    text: "Voor stucwerk in Reusel kunt u terecht voor advies op locatie, duidelijke prijzen en strak afgewerkte wanden.",
-  },
-  {
-    city: "Lommel",
-    text: "Ook net over de grens in Lommel kunnen wij meedenken over strak stucwerk, renovatie, pleisterwerk en betonlook afwerking.",
-  },
-  {
-    city: "Pelt",
-    text: "Voor Pelt en omgeving bieden wij advies en uitvoering voor glad pleisterwerk, schuurwerk en nette wand- en plafondafwerking.",
-  },
-];
+const TARGET_SERVICE_AREAS = LOCAL_LANDING_PAGES.map((page) => ({
+  city: page.city,
+  text: page.intro,
+}));
 
 const SEO_FAQS: { question: string; answer: React.ReactNode }[] = [
   {
@@ -1367,12 +1302,15 @@ export default function App() {
                           Stucwerk binnen 20 km van Bergeijk
                         </h2>
                         <p className="text-sm text-brand-dark-800 leading-relaxed">
-                          Zoekt u een stukadoor dichtbij Bergeijk? Wij richten ons op woningen binnen ongeveer 20 km van Bergeijk, waaronder Westerhoven, Luyksgestel, Eersel, Valkenswaard, Duizel, Hapert, Steensel, Lommel, Pelt, Riethoven, Dommelen, Waalre, Veldhoven, Bladel en Reusel.
+                          Zoekt u een stukadoor dichtbij Bergeijk? Wij richten ons op woningen binnen ongeveer 20 km van Bergeijk, waaronder {KEMPEN_CITIES_SEO_TEXT}.
                         </p>
                         <div className="flex flex-wrap gap-3 pt-2">
-                          <a href="/werkgebied" className="inline-flex items-center gap-1.5 bg-brand-clay-500 hover:bg-brand-clay-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
-                            Werkgebied bekijken
+                          <a href="/stukadoor-rondom-bergeijk" className="inline-flex items-center gap-1.5 bg-brand-clay-500 hover:bg-brand-clay-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
+                            Rondom Bergeijk
                             <ChevronRight className="w-3.5 h-3.5" />
+                          </a>
+                          <a href="/werkgebied" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-clay-600 hover:text-brand-clay-700 px-2 py-2">
+                            Werkgebied bekijken
                           </a>
                           <a href="/stukadoor-prijzen" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-clay-600 hover:text-brand-clay-700 px-2 py-2">
                             Richtprijzen
@@ -3188,6 +3126,7 @@ export default function App() {
             <div className="space-y-4">
               <h4 className="font-display font-semibold text-white text-sm uppercase tracking-wider">Snel Navigeren</h4>
               <ul className="space-y-2 text-xs text-brand-clay-300">
+                <li><a href="/stukadoor-rondom-bergeijk" className="hover:text-white transition-colors">Rondom Bergeijk</a></li>
                 <li><a href="/werkgebied" className="hover:text-white transition-colors">Werkgebied</a></li>
                 <li><a href="/diensten" className="hover:text-white transition-colors">Diensten</a></li>
                 <li><a href="/stukadoor-prijzen" className="hover:text-white transition-colors">Prijzen</a></li>

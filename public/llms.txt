@@ -16,6 +16,9 @@
 ## Belangrijke pagina's
 - Homepage: https://www.stukadoorsteamdekempen.nl/
 - Stukadoor Kempen: https://www.stukadoorsteamdekempen.nl/stukadoor-kempen
+- Stukadoor rondom Bergeijk: https://www.stukadoorsteamdekempen.nl/stukadoor-rondom-bergeijk
+- Stucwerk rondom Bergeijk: https://www.stukadoorsteamdekempen.nl/stucwerk-rondom-bergeijk
+- Stukadoor gezocht Bergeijk: https://www.stukadoorsteamdekempen.nl/stukadoor-gezocht-bergeijk
 - Stucwerk Kempen: https://www.stukadoorsteamdekempen.nl/stucwerk-kempen
 - Werkgebied: https://www.stukadoorsteamdekempen.nl/werkgebied
 - Diensten: https://www.stukadoorsteamdekempen.nl/diensten
@@ -25,26 +28,39 @@
 - Droogtijd: https://www.stukadoorsteamdekempen.nl/stucwerk-droogtijd
 - Offertecalculator: https://www.stukadoorsteamdekempen.nl/?tab=calculator
 
-## Stukadoor per plaats
+## Stukadoor per plaats (30)
 - Bergeijk: https://www.stukadoorsteamdekempen.nl/stukadoor-bergeijk
 - Westerhoven: https://www.stukadoorsteamdekempen.nl/stukadoor-westerhoven
+- Hoogeloon: https://www.stukadoorsteamdekempen.nl/stukadoor-hoogeloon
+- Gastel: https://www.stukadoorsteamdekempen.nl/stukadoor-gastel
 - Luyksgestel: https://www.stukadoorsteamdekempen.nl/stukadoor-luyksgestel
+- Casteren: https://www.stukadoorsteamdekempen.nl/stukadoor-casteren
 - Eersel: https://www.stukadoorsteamdekempen.nl/stukadoor-eersel
-- Valkenswaard: https://www.stukadoorsteamdekempen.nl/stukadoor-valkenswaard
 - Duizel: https://www.stukadoorsteamdekempen.nl/stukadoor-duizel
+- Reusel: https://www.stukadoorsteamdekempen.nl/stukadoor-reusel
 - Hapert: https://www.stukadoorsteamdekempen.nl/stukadoor-hapert
+- Knegsel: https://www.stukadoorsteamdekempen.nl/stukadoor-knegsel
+- Wintelre: https://www.stukadoorsteamdekempen.nl/stukadoor-wintelre
 - Steensel: https://www.stukadoorsteamdekempen.nl/stukadoor-steensel
+- Bladel: https://www.stukadoorsteamdekempen.nl/stukadoor-bladel
+- Netersel: https://www.stukadoorsteamdekempen.nl/stukadoor-netersel
+- Riethoven: https://www.stukadoorsteamdekempen.nl/stukadoor-riethoven
+- Baarle-Nassau: https://www.stukadoorsteamdekempen.nl/stukadoor-baarle-nassau
+- Leende: https://www.stukadoorsteamdekempen.nl/stukadoor-leende
+- Dommelen: https://www.stukadoorsteamdekempen.nl/stukadoor-dommelen
+- Valkenswaard: https://www.stukadoorsteamdekempen.nl/stukadoor-valkenswaard
+- Borkel en Schaft: https://www.stukadoorsteamdekempen.nl/stukadoor-borkel-en-schaft
+- Achel: https://www.stukadoorsteamdekempen.nl/stukadoor-achel
+- Hilvarenbeek: https://www.stukadoorsteamdekempen.nl/stukadoor-hilvarenbeek
+- Waalre: https://www.stukadoorsteamdekempen.nl/stukadoor-waalre
 - Lommel: https://www.stukadoorsteamdekempen.nl/stukadoor-lommel
 - Pelt: https://www.stukadoorsteamdekempen.nl/stukadoor-pelt
-- Riethoven: https://www.stukadoorsteamdekempen.nl/stukadoor-riethoven
-- Dommelen: https://www.stukadoorsteamdekempen.nl/stukadoor-dommelen
-- Borkel en Schaft: https://www.stukadoorsteamdekempen.nl/stukadoor-borkel-en-schaft
-- Waalre: https://www.stukadoorsteamdekempen.nl/stukadoor-waalre
+- Overpelt: https://www.stukadoorsteamdekempen.nl/stukadoor-overpelt
+- Oirschot: https://www.stukadoorsteamdekempen.nl/stukadoor-oirschot
+- Neerpelt: https://www.stukadoorsteamdekempen.nl/stukadoor-neerpelt
 - Veldhoven: https://www.stukadoorsteamdekempen.nl/stukadoor-veldhoven
-- Bladel: https://www.stukadoorsteamdekempen.nl/stukadoor-bladel
-- Reusel: https://www.stukadoorsteamdekempen.nl/stukadoor-reusel
 
 ## Contact
 - Telefoon: +31 497 123 456
 - E-mail: info@stukadoorsteamdekempen.nl
-- Werkgebied: Bergeijk en omliggende Kempen (ca. 20 km)
+- Werkgebied: Bergeijk en omliggende Kempen (ca. 20 km, 30 plaatsen)
