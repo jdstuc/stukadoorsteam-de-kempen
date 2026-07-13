@@ -27,10 +27,49 @@ import {
   Briefcase,
   Layout,
   LayoutGrid,
-  Grid
+  Grid,
+  Star
 } from "lucide-react";
 import { PlasterService, TeamMember, QuoteRequest, ChatMessage, Review } from "./types";
 import { AdvancedQuoteCalculator } from "./AdvancedQuoteCalculator";
+import { BrandImage } from "./BrandImage";
+
+const IMAGES = {
+  hero: "/images/hero_interior.jpg",
+  betonlook: "/images/betonlook_wall.jpg",
+  vakwerk: "/images/stukadoor_vakwerk.jpg",
+  schuurwerk: "/images/hero_interior.jpg",
+  renovatie: "/images/stukadoor_vakwerk.jpg",
+  team: {
+    jeroen: "/images/team/jeroen.jpg",
+    bram: "/images/team/bram.jpg",
+    kay: "/images/team/kay.jpg",
+  },
+};
+
+const SHOWCASE = [
+  {
+    src: IMAGES.hero,
+    alt: "Glad afgewerkt interieur met strak stucwerk",
+    title: "Glad pleisterwerk",
+    subtitle: "Spiegelglad en sausklaar",
+    objectPosition: "center",
+  },
+  {
+    src: IMAGES.betonlook,
+    alt: "Betonlook badkamer afwerking",
+    title: "Betonlook",
+    subtitle: "Waterdicht en naadloos",
+    objectPosition: "center",
+  },
+  {
+    src: IMAGES.vakwerk,
+    alt: "Stukadoor aan het werk in de Kempen",
+    title: "Vakwerk op locatie",
+    subtitle: "Netjes en stofarm",
+    objectPosition: "center top",
+  },
+];
 
 // Constant Data for Services
 const SERVICES: PlasterService[] = [
@@ -45,7 +84,7 @@ const SERVICES: PlasterService[] = [
     cons: ["Gevoeliger voor krasjes dan structuurwerk", "Hogere droogtijd door dikkere laag gips"],
     bestFor: "Woonkamers, slaapkamers en plafonds in zowel bestaande bouw als renovatie.",
     dryingTime: "ca. 1 dag per mm dikte (meestal 7-10 dagen)",
-    image: "/src/assets/images/hero_interior_1783519698007.jpg"
+    image: IMAGES.hero
   },
   {
     id: "betonlook",
@@ -58,7 +97,7 @@ const SERVICES: PlasterService[] = [
     cons: ["Hogere prijsklasse door intensief handwerk in meerdere lagen", "Vereist specialistische applicatie"],
     bestFor: "Badkamers, inloopdouches, keukens en exclusieve accentwanden.",
     dryingTime: "Volledig belastbaar na 5-7 dagen",
-    image: "/src/assets/images/betonlook_wall_1783519711432.jpg"
+    image: IMAGES.betonlook
   },
   {
     id: "schuurwerk",
@@ -71,7 +110,7 @@ const SERVICES: PlasterService[] = [
     cons: ["Moeilijker over te schilderen in de toekomst", "Gevoelig voor beschadiging bij aanraking op muren"],
     bestFor: "Plafonds in woonkamers, hallen en badkamers.",
     dryingTime: "3 tot 5 dagen",
-    image: "/src/assets/images/hero_interior_1783519698007.jpg"
+    image: IMAGES.schuurwerk
   },
   {
     id: "renovatiestucwerk",
@@ -84,7 +123,7 @@ const SERVICES: PlasterService[] = [
     cons: ["Prijs hangt sterk af van de staat van de ondergrond", "Voorbereiding en herstelwerk kunnen extra tijd vragen"],
     bestFor: "Renovaties, verbouwingen, herstelwerk en bestaande woningen met ongelijke wanden.",
     dryingTime: "afhankelijk van laagdikte en herstelwerk",
-    image: "/src/assets/images/stukadoor_vakwerk_1783519725470.jpg"
+    image: IMAGES.renovatie
   },
 ];
 
@@ -103,7 +142,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     specialty: "Glad Pleisterwerk & Betonlook",
     bio: "Jeroen zit al meer dan 18 jaar in het vak en is de perfectionist van het team. Hij houdt van strakke lijnen en modern design. Als u kiest voor betonlook in uw badkamer of een vlijmscherp glad gestuukte woonkamer, staat Jeroen gegarandeerd op de steiger.",
     experience: "18+ jaar ervaring",
-    avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400&h=400",
+    avatar: IMAGES.team.jeroen,
     skills: [
       { name: "Glad Stucwerk", percentage: 98 },
       { name: "Betonlook/Microcement", percentage: 95 },
@@ -116,7 +155,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     specialty: "Nieuwbouw & Renovatie",
     bio: "Bram is de specialist op het gebied van renovatie en strak pleisterwerk. Hij beoordeelt ondergronden zorgvuldig, werkt netjes en zorgt ervoor dat de planning strak op schema blijft.",
     experience: "14 jaar ervaring",
-    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400&h=400",
+    avatar: IMAGES.team.bram,
     skills: [
       { name: "Renovatie Stucwerk", percentage: 99 },
       { name: "Renovatiewerk", percentage: 88 },
@@ -129,7 +168,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     specialty: "Schuurwerk, Pleisterwerk & Gevels",
     bio: "Kay is onze vrolijke kracht en de meester in decoratieve afwerkingen. Met zijn vaste hand draait hij de mooiste schuurwerk-patronen op uw plafond en laat hij de werkplek altijd brandschoon achter.",
     experience: "12 jaar ervaring",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=400",
+    avatar: IMAGES.team.kay,
     skills: [
       { name: "Schuurwerk", percentage: 97 },
       { name: "Sier- & Schuurwerk", percentage: 94 },
@@ -688,7 +727,7 @@ export default function App() {
     <div className="min-h-screen bg-brand-beige-50 bg-plaster-texture flex flex-col selection:bg-brand-clay-300 selection:text-brand-dark-950">
       
       {/* Header & Navigation */}
-      <header id="app-header" className="sticky top-0 z-40 bg-brand-beige-50/90 backdrop-blur-md border-b border-brand-beige-200 shadow-sm transition-all duration-300">
+      <header id="app-header" className="sticky top-0 z-40 bg-brand-beige-50/95 backdrop-blur-lg border-b border-brand-beige-200/80 shadow-sm transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
@@ -723,7 +762,7 @@ export default function App() {
             </nav>
 
             {/* Quick Actions & Mobile Toggle */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <button
                 id="btn-quick-call"
                 onClick={() => askStucAdviseur("Wat kost glad pleisterwerk gemiddeld?")}
@@ -734,17 +773,22 @@ export default function App() {
               </button>
 
               <button
+                id="btn-header-calculator"
+                onClick={() => { setActiveTab("calculator"); setMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                className="hidden sm:flex items-center gap-2 bg-brand-clay-500 hover:bg-brand-clay-600 text-white px-4 py-2.5 rounded-xl font-semibold text-xs shadow-md shadow-brand-clay-500/20 transition-all"
+              >
+                <Calculator className="w-4 h-4" />
+                <span>Offerte berekenen</span>
+              </button>
+
+              <button
                 id="btn-admin-panel-toggle"
                 onClick={() => { setActiveTab("admin"); setMobileMenuOpen(false); }}
-                className={`p-2 rounded-lg border text-xs flex items-center gap-1.5 transition-all ${
-                  activeTab === "admin" 
-                    ? "bg-brand-dark-900 border-brand-dark-900 text-white" 
-                    : "border-brand-beige-300 text-brand-dark-800 hover:bg-brand-beige-100"
-                }`}
+                className="hidden xl:flex p-2 rounded-lg border border-brand-beige-300 text-brand-dark-800 hover:bg-brand-beige-100 text-xs items-center gap-1.5 transition-all"
                 title="Beheer Leads (Admin)"
               >
                 <Lock className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Leadbeheer</span>
+                <span>Leadbeheer</span>
               </button>
 
               <button
@@ -784,6 +828,14 @@ export default function App() {
                 <Phone className="w-5 h-5 text-brand-clay-500" />
                 <span>Bel direct: 0497 - 123 456</span>
               </a>
+              <button
+                id="mobile-btn-calculator"
+                onClick={() => { setActiveTab("calculator"); setMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                className="w-full bg-brand-clay-500 hover:bg-brand-clay-600 text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2"
+              >
+                <Calculator className="w-5 h-5" />
+                <span>Offerte berekenen</span>
+              </button>
               <button
                 id="mobile-btn-stucadviseur"
                 onClick={() => { setChatOpen(true); setMobileMenuOpen(false); }}
@@ -1116,18 +1168,27 @@ export default function App() {
 
             {/* LAYOUT 3: BENTO GRID */}
             {layoutStyle === "bento" && (
-              <section className="py-14 md:py-20 bg-gradient-to-b from-white via-blue-50/40 to-brand-beige-50">
+              <section className="py-14 md:py-20 bg-gradient-to-b from-white via-brand-beige-100/50 to-brand-beige-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                   
-                  {/* Bento Grid Container */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     
-                    {/* CARD 1: Main Welcome & Brand (Large - spans 2 columns on md/lg) */}
-                    <div className="md:col-span-2 bg-gradient-to-br from-blue-950 via-blue-900 to-slate-950 text-white rounded-3xl p-8 md:p-10 shadow-xl flex flex-col justify-between relative overflow-hidden group border border-blue-900/20">
-                      <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-brand-clay-500 rounded-full blur-3xl opacity-15 group-hover:opacity-20 transition-opacity duration-500"></div>
-                      <div className="absolute left-8 top-8 h-16 w-16 rounded-full border border-white/10"></div>
+                    <div className="md:col-span-2 min-h-[420px] bg-gradient-to-br from-brand-dark-950 via-brand-dark-900 to-brand-dark-800 text-white rounded-3xl p-8 md:p-10 shadow-xl flex flex-col justify-between relative overflow-hidden group border border-brand-dark-800/50">
+                      <BrandImage
+                        src={IMAGES.hero}
+                        alt=""
+                        loading="eager"
+                        zoom={false}
+                        overlay={false}
+                        className="absolute inset-0"
+                        imageClassName="opacity-50"
+                        objectPosition="center"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-br from-brand-dark-950/92 via-brand-dark-900/88 to-brand-dark-800/80" aria-hidden="true" />
+                      <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-brand-clay-500 rounded-full blur-3xl opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
+                      <div className="absolute left-8 top-8 h-16 w-16 rounded-full border border-white/10" />
                       <div className="relative z-10 space-y-6">
-                        <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 text-blue-100 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">
+                        <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 text-brand-beige-100 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">
                           <MapPin className="w-3 h-3 text-brand-clay-400" />
                           <span>Binnen 20 km van Bergeijk</span>
                         </div>
@@ -1135,7 +1196,7 @@ export default function App() {
                           Stukadoorsteam <br/>
                           <span className="text-brand-clay-500">De Kempen</span>
                         </h1>
-                        <p className="text-blue-100 text-sm sm:text-base max-w-xl leading-relaxed">
+                        <p className="text-brand-beige-200 text-sm sm:text-base max-w-xl leading-relaxed">
                           Jeroen, Bram & Kay leveren strak stucwerk in Bergeijk, Westerhoven, Luyksgestel, Eersel, Valkenswaard, Duizel, Hapert, Steensel en omliggende dorpen.
                         </p>
                       </div>
@@ -1143,50 +1204,42 @@ export default function App() {
                       <div className="relative z-10 flex flex-col sm:flex-row gap-4 pt-8">
                         <button
                           onClick={() => { setActiveTab("calculator"); window.scrollTo({top:0, behavior:'smooth'}); }}
-                          className="bg-brand-clay-500 hover:bg-brand-clay-600 text-white font-semibold px-6 py-3.5 rounded-xl shadow-lg shadow-brand-clay-500/20 transition-all flex items-center justify-center gap-2 text-sm"
+                          className="bg-brand-clay-500 hover:bg-brand-clay-600 text-white font-semibold px-6 py-3.5 rounded-xl shadow-lg shadow-brand-clay-500/25 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2 text-sm"
                         >
                           <Calculator className="w-4 h-4" />
                           <span>Offerte berekenen</span>
                         </button>
                         <button
-                          onClick={() => setChatOpen(true)}
+                          onClick={() => { setActiveTab("contact"); window.scrollTo({top:0, behavior:'smooth'}); }}
                           className="bg-white/10 hover:bg-white/15 text-white border border-white/15 font-semibold px-6 py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 text-sm"
                         >
-                          <Sparkles className="w-4 h-4 text-brand-clay-400" />
-                          <span>StucAdviseur AI</span>
+                          <Phone className="w-4 h-4 text-brand-clay-400" />
+                          <span>Gratis advies</span>
                         </button>
                       </div>
                     </div>
 
-                    {/* CARD 2: Image Showcase (1 col) */}
-                    <div className="bg-white rounded-3xl p-4 shadow-sm border border-blue-100 flex flex-col justify-between">
-                      <div className="rounded-2xl overflow-hidden aspect-[4/3] md:aspect-square flex-grow bg-blue-50 relative">
-                        <img 
-                          src="/src/assets/images/stukadoor_vakwerk_1783519725470.jpg" 
-                          alt="Vakwerk" 
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=600";
-                          }}
-                        />
-                        <div className="absolute top-3 left-3 bg-blue-950 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
-                          Strakke afwerking
-                        </div>
-                      </div>
+                    <div className="card-soft p-4 flex flex-col justify-between transition-all">
+                      <BrandImage
+                        src={IMAGES.vakwerk}
+                        alt="Strak stucwerk door Stukadoorsteam De Kempen"
+                        badge="Vakwerk op locatie"
+                        className="rounded-2xl aspect-[4/3] md:aspect-square flex-grow"
+                        objectPosition="center top"
+                      />
                       <div className="pt-4 text-center">
-                        <p className="font-display font-bold text-base text-blue-950">Gratis advies op locatie</p>
-                        <p className="text-xs text-slate-500">Inmeten en meedenken zonder voorrijkosten</p>
+                        <p className="font-display font-bold text-base text-brand-dark-900">Gratis advies op locatie</p>
+                        <p className="text-xs text-brand-dark-800/70">Inmeten en meedenken zonder voorrijkosten</p>
                       </div>
                     </div>
 
-                    {/* CARD 3: Direct ZZP Team Info (1 col) */}
-                    <div className="bg-white rounded-3xl p-6 shadow-sm border border-blue-100 flex flex-col justify-between space-y-4">
+                    <div className="bg-white rounded-3xl p-6 shadow-sm border border-brand-beige-200 flex flex-col justify-between space-y-4 hover:shadow-md transition-shadow">
                       <div>
-                        <div className="h-10 w-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-900 mb-4">
+                        <div className="h-10 w-10 rounded-xl bg-brand-beige-100 flex items-center justify-center text-brand-clay-600 mb-4">
                           <User className="w-5 h-5" />
                         </div>
-                        <h3 className="font-display font-bold text-lg text-blue-950">Direct contact met de vakmannen</h3>
-                        <p className="text-xs text-slate-600 leading-relaxed mt-1">
+                        <h3 className="font-display font-bold text-lg text-brand-dark-900">Direct contact met de vakmannen</h3>
+                        <p className="text-xs text-brand-dark-800 leading-relaxed mt-1">
                           Geen anonieme planning: Jeroen, Bram en Kay denken zelf mee en voeren het werk netjes uit.
                         </p>
                       </div>
@@ -1199,23 +1252,22 @@ export default function App() {
                       </button>
                     </div>
 
-                    {/* CARD 4: Quick Prices Calculator Preview (1 col) */}
-                    <div className="bg-gradient-to-br from-blue-50 to-white rounded-3xl p-6 shadow-sm border border-blue-100 flex flex-col justify-between space-y-4">
+                    <div className="bg-gradient-to-br from-brand-beige-100 to-white rounded-3xl p-6 shadow-sm border border-brand-beige-200 flex flex-col justify-between space-y-4 hover:shadow-md transition-shadow">
                       <div>
                         <div className="h-10 w-10 rounded-xl bg-brand-clay-500 text-white flex items-center justify-center mb-4">
                           <Euro className="w-5 h-5" />
                         </div>
-                        <h3 className="font-display font-bold text-lg text-blue-950">Richtprijzen</h3>
+                        <h3 className="font-display font-bold text-lg text-brand-dark-900">Richtprijzen</h3>
                         <div className="space-y-2 mt-3">
-                          <div className="flex justify-between text-xs text-slate-700 border-b border-blue-100 pb-1.5">
+                          <div className="flex justify-between text-xs text-brand-dark-800 border-b border-brand-beige-200 pb-1.5">
                             <span>Glad Pleisterwerk</span>
                             <span className="font-semibold text-brand-clay-700">v.a. €15 / m²</span>
                           </div>
-                          <div className="flex justify-between text-xs text-slate-700 border-b border-blue-100 pb-1.5">
+                          <div className="flex justify-between text-xs text-brand-dark-800 border-b border-brand-beige-200 pb-1.5">
                             <span>Schuurwerk</span>
                             <span className="font-semibold text-brand-clay-700">v.a. €18 / m²</span>
                           </div>
-                          <div className="flex justify-between text-xs text-slate-700 pb-1">
+                          <div className="flex justify-between text-xs text-brand-dark-800 pb-1">
                             <span>Renovatiepleisterwerk</span>
                             <span className="font-semibold text-brand-clay-700">op maat</span>
                           </div>
@@ -1230,16 +1282,15 @@ export default function App() {
                       </button>
                     </div>
 
-                    {/* CARD 5: Live Review Snippet (1 col) */}
-                    <div className="bg-white rounded-3xl p-6 shadow-sm border border-blue-100 flex flex-col justify-between space-y-4">
+                    <div className="bg-white rounded-3xl p-6 shadow-sm border border-brand-beige-200 flex flex-col justify-between space-y-4 hover:shadow-md transition-shadow">
                       <div>
                         <div className="flex items-center gap-1 text-brand-clay-500 mb-3">
                           {[...Array(5)].map((_, i) => (
-                            <Sparkles key={i} className="w-4 h-4 fill-brand-clay-500 text-brand-clay-500" />
+                            <Star key={i} className="w-4 h-4 fill-brand-clay-500 text-brand-clay-500" />
                           ))}
                         </div>
-                        <h3 className="font-display font-bold text-base text-blue-950">"Spiegelglad werk!"</h3>
-                        <p className="text-xs text-slate-600 italic mt-1.5 line-clamp-3">
+                        <h3 className="font-display font-bold text-base text-brand-dark-900">"Spiegelglad werk!"</h3>
+                        <p className="text-xs text-brand-dark-800 italic mt-1.5 line-clamp-3">
                           "Onze hele nieuwbouwwoning in Eersel is door het team strak gepleisterd. Het resultaat is echt fenomenaal, spiegelglad en snel!"
                         </p>
                         <p className="text-[11px] text-brand-clay-600 mt-2 font-medium">— Fam. van de Gevel, Eersel</p>
@@ -1255,50 +1306,84 @@ export default function App() {
 
                   </div>
 
-                  <section className="mt-12 bg-white rounded-3xl border border-blue-100 shadow-sm p-6 sm:p-8">
+                  <section className="mt-10">
+                    <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-5">
+                      <div>
+                        <span className="text-xs font-semibold uppercase tracking-widest text-brand-clay-600 block">
+                          Ons werk
+                        </span>
+                        <h2 className="section-title text-2xl sm:text-3xl text-brand-dark-900 mt-1">
+                          Strak stucwerk, mooi in beeld
+                        </h2>
+                      </div>
+                      <button
+                        onClick={() => { setActiveTab("services"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                        className="inline-flex items-center gap-1 text-sm font-semibold text-brand-clay-600 hover:text-brand-clay-700"
+                      >
+                        Bekijk alle diensten
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {SHOWCASE.map((item) => (
+                        <article key={item.title} className="card-soft overflow-hidden transition-all">
+                          <BrandImage
+                            src={item.src}
+                            alt={item.alt}
+                            className="h-56 md:h-64"
+                            objectPosition={item.objectPosition}
+                            badge={item.title}
+                          />
+                          <div className="p-4">
+                            <p className="font-display font-bold text-brand-dark-900">{item.title}</p>
+                            <p className="text-xs text-brand-dark-800/70 mt-1">{item.subtitle}</p>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+
+                  <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {[
+                      { icon: ShieldCheck, title: "5 jaar garantie", subtitle: "NOA afbouwkwaliteit" },
+                      { icon: MapPin, title: "Geen voorrijkosten", subtitle: "Binnen 20 km Bergeijk" },
+                      { icon: Award, title: "3 vakmannen", subtitle: "Jeroen, Bram & Kay" },
+                      { icon: ThumbsUp, title: "Stofvrij schuren", subtitle: "Professionele afzuiging" },
+                    ].map(({ icon: Icon, title, subtitle }) => (
+                      <div key={title} className="bg-white rounded-2xl border border-brand-beige-200 p-4 flex items-start gap-3 shadow-sm">
+                        <div className="h-9 w-9 rounded-xl bg-brand-clay-100 text-brand-clay-600 flex items-center justify-center flex-shrink-0">
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <p className="font-display font-bold text-sm text-brand-dark-900">{title}</p>
+                          <p className="text-[11px] text-brand-dark-800/70 mt-0.5">{subtitle}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <section className="mt-12 bg-white rounded-3xl border border-brand-beige-200 shadow-sm p-6 sm:p-8">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                       <div className="lg:col-span-5 space-y-3">
                         <span className="text-xs font-semibold uppercase tracking-widest text-brand-clay-600 block">
                           Lokale stukadoor in de Kempen
                         </span>
-                        <h2 className="font-display font-bold text-2xl sm:text-3xl text-blue-950">
+                        <h2 className="font-display font-bold text-2xl sm:text-3xl text-brand-dark-900">
                           Stucwerk binnen 20 km van Bergeijk
                         </h2>
-                        <p className="text-sm text-slate-600 leading-relaxed">
+                        <p className="text-sm text-brand-dark-800 leading-relaxed">
                           Zoekt u een stukadoor dichtbij Bergeijk? Wij richten ons op woningen binnen ongeveer 20 km van Bergeijk, waaronder Westerhoven, Luyksgestel, Eersel, Valkenswaard, Duizel, Hapert, Steensel, Lommel, Pelt, Riethoven, Dommelen, Waalre, Veldhoven, Bladel en Reusel.
                         </p>
                         <div className="flex flex-wrap gap-3 pt-2">
-                          <a href="/werkgebied" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-clay-600 hover:text-brand-clay-700">
-                            Volledig werkgebied bekijken
+                          <a href="/werkgebied" className="inline-flex items-center gap-1.5 bg-brand-clay-500 hover:bg-brand-clay-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
+                            Werkgebied bekijken
                             <ChevronRight className="w-3.5 h-3.5" />
                           </a>
-                          <a href="/diensten" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-clay-600 hover:text-brand-clay-700">
-                            Alle stucwerk diensten
-                            <ChevronRight className="w-3.5 h-3.5" />
+                          <a href="/stukadoor-prijzen" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-clay-600 hover:text-brand-clay-700 px-2 py-2">
+                            Richtprijzen
                           </a>
-                          <a href="/stukadoor-prijzen" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-clay-600 hover:text-brand-clay-700">
-                            Stukadoor prijzen
-                            <ChevronRight className="w-3.5 h-3.5" />
-                          </a>
-                          <a href="/over-ons" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-clay-600 hover:text-brand-clay-700">
-                            Over Jeroen, Bram en Kay
-                            <ChevronRight className="w-3.5 h-3.5" />
-                          </a>
-                          <a href="/contact-stukadoor" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-clay-600 hover:text-brand-clay-700">
-                            Contact stukadoor
-                            <ChevronRight className="w-3.5 h-3.5" />
-                          </a>
-                          <a href="/stukadoor-kempen" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-clay-600 hover:text-brand-clay-700">
-                            Stukadoor in de Kempen
-                            <ChevronRight className="w-3.5 h-3.5" />
-                          </a>
-                          <a href="/stucwerk-kempen" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-clay-600 hover:text-brand-clay-700">
-                            Stucwerk in de Kempen
-                            <ChevronRight className="w-3.5 h-3.5" />
-                          </a>
-                          <a href="/stucwerk-droogtijd" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-clay-600 hover:text-brand-clay-700">
-                            Droogtijd na stucwerk
-                            <ChevronRight className="w-3.5 h-3.5" />
+                          <a href="/diensten" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-clay-600 hover:text-brand-clay-700 px-2 py-2">
+                            Alle diensten
                           </a>
                         </div>
                       </div>
@@ -1308,13 +1393,13 @@ export default function App() {
                             const slug = LOCAL_SEO_CITY_SLUGS[city];
                             if (!slug) {
                               return (
-                                <span key={city} className="rounded-full bg-slate-50 border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600">
+                                <span key={city} className="rounded-full bg-brand-beige-100 border border-brand-beige-200 px-3 py-1.5 text-xs font-medium text-brand-dark-800">
                                   stukadoor {city}
                                 </span>
                               );
                             }
                             return (
-                              <a key={city} href={`/stukadoor-${slug}`} className="rounded-full bg-blue-50 border border-blue-100 px-3 py-1.5 text-xs font-medium text-blue-950 hover:border-brand-clay-300 hover:text-brand-clay-700 transition-colors">
+                              <a key={city} href={`/stukadoor-${slug}`} className="rounded-full bg-brand-beige-100 border border-brand-beige-200 px-3 py-1.5 text-xs font-medium text-brand-dark-900 hover:border-brand-clay-400 hover:text-brand-clay-700 hover:bg-brand-clay-100/50 transition-colors">
                                 stukadoor {city}
                               </a>
                             );
@@ -1327,7 +1412,7 @@ export default function App() {
                             { label: "Schuurwerk voor een ambachtelijke plafondafwerking", href: "/schuurwerk-plafond" },
                             { label: "Betonlook en microcement voor badkamer of keuken", href: "/betonlook-badkamer" },
                           ].map((item) => (
-                            <a key={item.href} href={item.href} className="flex items-start gap-2 text-sm text-slate-700 hover:text-brand-clay-700 transition-colors">
+                            <a key={item.href} href={item.href} className="flex items-start gap-2 text-sm text-brand-dark-800 hover:text-brand-clay-700 transition-colors bg-brand-beige-50/80 rounded-xl p-3 border border-brand-beige-100 hover:border-brand-clay-300">
                               <CheckCircle className="w-4 h-4 text-brand-clay-500 mt-0.5 flex-shrink-0" />
                               <span>{item.label}</span>
                             </a>
@@ -1337,25 +1422,25 @@ export default function App() {
                     </div>
                   </section>
 
-                  <section className="mt-8 bg-white rounded-3xl border border-blue-100 shadow-sm p-6 sm:p-8">
+                  <section className="mt-8 bg-white rounded-3xl border border-brand-beige-200 shadow-sm p-6 sm:p-8">
                     <div className="max-w-3xl space-y-3 mb-6">
                       <span className="text-xs font-semibold uppercase tracking-widest text-brand-clay-600 block">
                         Werkgebied
                       </span>
-                      <h2 className="font-display font-bold text-2xl sm:text-3xl text-blue-950">
+                      <h2 className="font-display font-bold text-2xl sm:text-3xl text-brand-dark-900">
                         Stukadoor per plaats binnen 20 km van Bergeijk
                       </h2>
-                      <p className="text-sm text-slate-600 leading-relaxed">
+                      <p className="text-sm text-brand-dark-800 leading-relaxed">
                         Door ons werkgebied bewust compact te houden, kunnen we snel komen kijken, duidelijk adviseren en zonder onnodige reiskosten werken in dorpen rondom Bergeijk.
                       </p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
                       {TARGET_SERVICE_AREAS.map((area) => (
-                        <article key={area.city} className="rounded-2xl bg-blue-50/60 border border-blue-100 p-5">
-                          <h3 className="font-display font-bold text-lg text-blue-950">
+                        <article key={area.city} className="rounded-2xl bg-brand-beige-50 border border-brand-beige-200 p-5 hover:border-brand-clay-300 hover:shadow-sm transition-all">
+                          <h3 className="font-display font-bold text-lg text-brand-dark-900">
                             Stukadoor {area.city}
                           </h3>
-                          <p className="text-sm text-slate-600 leading-relaxed mt-2">
+                          <p className="text-sm text-brand-dark-800 leading-relaxed mt-2">
                             {area.text}
                           </p>
                           <a
@@ -1371,24 +1456,24 @@ export default function App() {
                   </section>
 
                   <section className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <div className="lg:col-span-4 bg-blue-950 text-white rounded-3xl p-6 sm:p-8 shadow-sm">
+                    <div className="lg:col-span-4 bg-brand-dark-950 text-white rounded-3xl p-6 sm:p-8 shadow-sm">
                       <span className="text-xs font-semibold uppercase tracking-widest text-brand-clay-400 block">
                         Veelgestelde vragen
                       </span>
                       <h2 className="font-display font-bold text-2xl sm:text-3xl mt-3">
                         Antwoorden over stucwerk, prijzen en droogtijd
                       </h2>
-                      <p className="text-sm text-blue-100 leading-relaxed mt-4">
-                        Deze vragen helpen bezoekers snel verder en maken duidelijk waar Stukadoorsteam De Kempen lokaal voor gevonden mag worden.
+                      <p className="text-sm text-brand-beige-200 leading-relaxed mt-4">
+                        Snel antwoord op de meest gestelde vragen over stucwerk, richtprijzen en droogtijd in de Kempen.
                       </p>
                     </div>
                     <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4">
                       {SEO_FAQS.map((faq) => (
-                        <article key={faq.question} className="bg-white rounded-2xl border border-blue-100 p-5 shadow-sm">
-                          <h3 className="font-display font-bold text-base text-blue-950">
+                        <article key={faq.question} className="bg-white rounded-2xl border border-brand-beige-200 p-5 shadow-sm hover:border-brand-clay-300 hover:shadow-md transition-all">
+                          <h3 className="font-display font-bold text-base text-brand-dark-900">
                             {faq.question}
                           </h3>
-                          <p className="text-sm text-slate-600 leading-relaxed mt-2">
+                          <p className="text-sm text-brand-dark-800 leading-relaxed mt-2">
                             {faq.answer}
                           </p>
                         </article>
@@ -2162,7 +2247,16 @@ export default function App() {
 
             {/* AI Assistant Banner */}
             <section className="py-16 bg-gradient-to-br from-brand-clay-500 to-brand-clay-700 text-white relative overflow-hidden">
-              <div className="absolute inset-0 bg-plaster-texture opacity-10"></div>
+              <BrandImage
+                src={IMAGES.betonlook}
+                alt=""
+                zoom={false}
+                overlay={false}
+                className="absolute inset-0 opacity-25"
+                objectPosition="center"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-clay-600/95 via-brand-clay-600/90 to-brand-clay-800/95" aria-hidden="true" />
+              <div className="absolute inset-0 bg-plaster-texture opacity-10" aria-hidden="true" />
               <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6 relative z-10">
                 <div className="h-14 w-14 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto text-brand-beige-50 shadow-inner">
                   <Sparkles className="w-8 h-8 text-brand-beige-100" />
@@ -2208,34 +2302,39 @@ export default function App() {
 
         {/* TAB 2: ONZE DIENSTEN */}
         {activeTab === "services" && (
-          <div id="section-services" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 animate-fadeIn">
-            <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
-              <span className="text-xs font-semibold uppercase tracking-widest text-brand-clay-600 block">Wat we doen</span>
-              <h1 className="font-display font-bold text-3xl sm:text-4xl text-brand-dark-900">Professionele wand- en plafondafwerking</h1>
-              <p className="text-brand-dark-800 text-base">
-                Of u nu kiest voor strak en modern, een klassiek patroon of luxe waterdichte betonlook; als Stukadoorsteam De Kempen hebben we voor iedere klus de juiste specialist in huis.
-              </p>
+          <div id="section-services" className="animate-fadeIn">
+            <div className="relative overflow-hidden bg-brand-dark-950 text-white">
+              <BrandImage
+                src={IMAGES.hero}
+                alt=""
+                overlay={false}
+                zoom={false}
+                className="absolute inset-0 opacity-35"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-brand-dark-950/95 via-brand-dark-900/85 to-brand-dark-800/70" />
+              <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 text-center space-y-4">
+                <span className="text-xs font-semibold uppercase tracking-widest text-brand-clay-400 block">Wat we doen</span>
+                <h1 className="font-display font-bold text-3xl sm:text-5xl tracking-tight">Professionele wand- en plafondafwerking</h1>
+                <p className="text-brand-beige-200 text-base max-w-2xl mx-auto">
+                  Strak, modern, ambachtelijk of luxe waterdicht — voor elke klus de juiste specialist uit de Kempen.
+                </p>
+              </div>
             </div>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
             {/* Services Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {SERVICES.map((service, idx) => (
-                <div key={idx} className="bg-white rounded-2xl overflow-hidden shadow-md border border-brand-beige-200 flex flex-col justify-between hover:shadow-xl transition-shadow group">
+                <div key={idx} className="card-soft overflow-hidden flex flex-col justify-between transition-all group">
                   <div>
-                    {/* Service Image placeholder */}
-                    <div className="h-48 bg-brand-beige-200 relative overflow-hidden">
-                      <img 
-                        src={service.image} 
-                        alt={service.title} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1581094288338-2314dddb7eed?auto=format&fit=crop&q=80&w=400";
-                        }}
-                      />
-                      <div className="absolute top-4 right-4 bg-brand-dark-900/80 backdrop-blur-sm px-3 py-1.5 rounded-lg text-white font-display font-bold text-xs">
-                        €{service.minPrice} - €{service.maxPrice} / m²
-                      </div>
-                    </div>
+                    <BrandImage
+                      src={service.image}
+                      alt={service.title}
+                      badge={`€${service.minPrice}–€${service.maxPrice} / m²`}
+                      className="h-60 md:h-64"
+                      objectPosition={service.id === "schuurwerk" ? "top center" : service.id === "betonlook" ? "center" : "center"}
+                      loading={idx < 2 ? "eager" : "lazy"}
+                    />
 
                     <div className="p-6 space-y-4">
                       <h3 className="font-display font-bold text-xl text-brand-dark-900">{service.title}</h3>
@@ -2282,7 +2381,7 @@ export default function App() {
                         href={`/${SERVICE_PAGE_SLUGS[service.id]}`}
                         className="inline-flex items-center gap-1 text-xs font-semibold text-brand-clay-600 hover:text-brand-clay-700"
                       >
-                        SEO-pagina over {service.title}
+                        Meer over {service.title}
                         <ChevronRight className="w-3.5 h-3.5" />
                       </a>
                     </div>
@@ -2317,6 +2416,7 @@ export default function App() {
                 </div>
               </div>
             </div>
+            </div>
           </div>
         )}
 
@@ -2342,10 +2442,15 @@ export default function App() {
                 >
                   {/* Photo Left/Right */}
                   <div className={`lg:col-span-4 ${idx % 2 === 1 ? "lg:order-last" : ""}`}>
-                    <div className="aspect-square rounded-2xl bg-brand-beige-100 border border-brand-beige-300 flex items-center justify-center overflow-hidden relative group">
-                      <div className="text-brand-clay-600 font-display font-bold text-4xl">{member.name}</div>
-                      <div className="absolute inset-0 bg-brand-clay-500/5 group-hover:scale-105 transition-transform duration-300"></div>
-                      <div className="absolute bottom-4 left-4 bg-brand-dark-900 text-brand-beige-100 px-3 py-1.5 rounded-lg text-xs font-semibold">
+                    <div className="aspect-square rounded-2xl overflow-hidden relative group ring-4 ring-brand-beige-100 shadow-lg">
+                      <BrandImage
+                        src={member.avatar}
+                        alt={`${member.name} - stukadoor bij Stukadoorsteam De Kempen`}
+                        zoom={true}
+                        className="h-full"
+                        objectPosition="center top"
+                      />
+                      <div className="absolute bottom-4 left-4 z-10 bg-brand-dark-900/90 backdrop-blur-sm text-brand-beige-100 px-3 py-1.5 rounded-lg text-xs font-semibold">
                         {member.experience}
                       </div>
                     </div>
@@ -2401,7 +2506,9 @@ export default function App() {
 
         {/* TAB 4: CALCULATOR */}
         {activeTab === "calculator" && (
-          <AdvancedQuoteCalculator />
+          <div className="bg-gradient-to-b from-brand-beige-100/40 to-brand-beige-50 animate-fadeIn">
+            <AdvancedQuoteCalculator />
+          </div>
         )}
 
         {/* Oude eenvoudige calculator - bewaard maar niet meer weergegeven */}
@@ -2656,12 +2763,11 @@ export default function App() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {REVIEWS.map((review, idx) => (
-                <div key={idx} className="bg-white rounded-2xl p-6 shadow-md border border-brand-beige-200 flex flex-col justify-between">
+                <div key={idx} className="bg-white rounded-3xl p-6 shadow-md border border-brand-beige-200 flex flex-col justify-between hover:shadow-lg hover:border-brand-clay-300/50 transition-all">
                   <div className="space-y-4">
-                    {/* Stars */}
-                    <div className="flex items-center gap-1 text-amber-500">
+                    <div className="flex items-center gap-1 text-brand-clay-500">
                       {Array.from({ length: review.rating }).map((_, i) => (
-                        <span key={i} className="text-lg">★</span>
+                        <Star key={i} className="w-4 h-4 fill-brand-clay-500 text-brand-clay-500" />
                       ))}
                     </div>
                     <p className="text-sm text-brand-dark-800 leading-relaxed italic">
@@ -3070,7 +3176,7 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-brand-dark-950 text-brand-beige-100 pt-16 pb-8 border-t border-brand-dark-900">
+      <footer className="bg-brand-dark-950 text-brand-beige-100 pt-16 pb-8 border-t-4 border-brand-clay-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-12 border-b border-brand-dark-800">
             
@@ -3270,25 +3376,24 @@ export default function App() {
           <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-brand-beige-200 flex flex-col">
             
             {/* Modal Header Image */}
-            <div className="h-56 bg-brand-beige-100 relative overflow-hidden flex-shrink-0">
-              <img 
-                src={selectedService.image} 
-                alt={selectedService.title} 
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=600";
-                }}
+            <div className="h-64 sm:h-72 relative overflow-hidden flex-shrink-0">
+              <BrandImage
+                src={selectedService.image}
+                alt={selectedService.title}
+                loading="eager"
+                zoom={false}
+                overlay={false}
+                className="h-full"
+                badge={`Vanaf €${selectedService.minPrice} per m²`}
+                objectPosition={selectedService.id === "schuurwerk" ? "top center" : "center"}
               />
               <button
                 id="btn-close-modal-img"
                 onClick={() => setSelectedService(null)}
-                className="absolute top-4 right-4 h-9 w-9 bg-brand-dark-900/80 hover:bg-brand-dark-900 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
+                className="absolute top-4 right-4 z-20 h-9 w-9 bg-brand-dark-900/80 hover:bg-brand-dark-900 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
-              <div className="absolute bottom-4 left-4 bg-brand-clay-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider">
-                Vanaf €{selectedService.minPrice} per m²
-              </div>
             </div>
 
             {/* Modal Body */}

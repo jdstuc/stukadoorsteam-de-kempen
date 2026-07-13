@@ -160,16 +160,16 @@ export function AdvancedQuoteCalculator() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 animate-fadeIn">
+    <div id="section-calculator" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 animate-fadeIn">
       <div className="text-center space-y-4 mb-12">
         <span className="text-xs font-semibold uppercase tracking-widest text-brand-clay-600 block">
           Uitgebreide offertecalculator
         </span>
         <h1 className="font-display font-bold text-3xl sm:text-4xl text-brand-dark-900">
-          Bereken uw stucwerk met live offerte-preview
+          Bereken uw stucwerk met live prijsindicatie
         </h1>
         <p className="text-brand-dark-800 text-base max-w-2xl mx-auto">
-          Vul wanden, plafonds, hoeken en dagkanten in. De calculator kiest automatisch tussen m²-prijs en uurtarief en toont direct een duidelijke prijsindicatie.
+          Vul wanden, plafonds, hoeken en dagkanten in. U ziet direct een richtprijs — Jeroen, Bram of Kay nemen daarna contact op voor advies op locatie.
         </p>
       </div>
 

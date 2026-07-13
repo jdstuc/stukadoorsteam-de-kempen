@@ -8,4 +8,5 @@ coverage/
 !.env.example
 quotes_db.json
 public/assets/
+public/index.html
 .vercel
