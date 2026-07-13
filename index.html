@@ -106,6 +106,20 @@
         },
         "hasMap": "https://www.google.com/maps/search/?api=1&query=Bergeijk,+Noord-Brabant,+Nederland",
         "priceRange": "€€",
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            "opens": "07:30",
+            "closes": "18:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Saturday",
+            "opens": "08:00",
+            "closes": "14:00"
+          }
+        ],
         "aggregateRating": {
           "@type": "AggregateRating",
           "ratingValue": "5",
@@ -218,6 +232,11 @@
           "@type": "Organization",
           "name": "Stukadoorsteam De Kempen",
           "@id": "https://www.stukadoorsteamdekempen.nl/#localbusiness"
+        },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://www.stukadoorsteamdekempen.nl/?tab=calculator",
+          "query-input": "required name=search_term_string"
         }
       }
     </script>
@@ -290,7 +309,10 @@
         <li><a href="/stukadoor-hoogeloon">Stukadoor Hoogeloon</a></li>
         <li><a href="/stukadoor-eersel">Stukadoor Eersel</a></li>
         <li><a href="/stukadoor-valkenswaard">Stukadoor Valkenswaard</a></li>
-        <li><a href="/glad-pleisterwerk">Glad pleisterwerk</a></li>
+        <li><a href="/kosten-stucwerk">Kosten stucwerk</a></li>
+        <li><a href="/veelgestelde-vragen">Veelgestelde vragen</a></li>
+        <li><a href="/klantervaringen">Klantervaringen</a></li>
+        <li><a href="/glad-pleisterwerk-vs-schuurwerk">Glad vs schuurwerk</a></li>
         <li><a href="/stucwerk-nieuwbouw">Stucwerk nieuwbouw</a></li>
         <li><a href="/contact-stukadoor">Contact</a></li>
         <li><a href="/?tab=calculator">Offerte calculator</a></li>

@@ -330,6 +330,24 @@ const SERVICE_PAGE_SLUGS: Record<string, string> = {
   "renovatiestucwerk": "renovatiestucwerk",
 };
 
+const TAB_TO_QUERY: Partial<Record<ActiveTab, string>> = {
+  services: "services",
+  team: "team",
+  calculator: "calculator",
+  reviews: "reviews",
+  contact: "contact",
+  admin: "admin",
+};
+
+function getTabUrl(tab: ActiveTab): string {
+  const query = TAB_TO_QUERY[tab];
+  if (!query) {
+    return "/";
+  }
+
+  return `/?tab=${query}`;
+}
+
 export default function App() {
   // Navigation State
   const [activeTab, setActiveTab] = useState<ActiveTab>("home");
@@ -400,6 +418,21 @@ export default function App() {
     }
   }, []);
 
+  useEffect(() => {
+    const onPopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get("tab");
+      if (tab && TAB_FROM_QUERY[tab]) {
+        setActiveTab(TAB_FROM_QUERY[tab]);
+      } else {
+        setActiveTab("home");
+      }
+    };
+
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
   // Load quotes for admin if authenticated
   useEffect(() => {
     if (isAdminAuthenticated) {
@@ -410,8 +443,8 @@ export default function App() {
   useEffect(() => {
     const pageMeta: Record<ActiveTab, { title: string; description: string }> = {
       home: {
-        title: "Stukadoor binnen 20 km van Bergeijk | Eersel, Valkenswaard, Luyksgestel",
-        description: `Stukadoorsteam De Kempen werkt binnen 20 km van Bergeijk: ${KEMPEN_CITIES_SEO_TEXT}.`,
+        title: "Stukadoor Bergeijk | Stucwerk binnen 20 km van Bergeijk",
+        description: `Stukadoorsteam De Kempen in Bergeijk en omgeving: ${KEMPEN_CITIES_SEO_TEXT}. Glad pleisterwerk, schuurwerk, renovatie en betonlook.`,
       },
       services: {
         title: "Stucwerk diensten | Glad pleisterwerk, schuurwerk en betonlook",
@@ -427,7 +460,7 @@ export default function App() {
       },
       reviews: {
         title: "Klantervaringen | Stukadoorsteam De Kempen",
-        description: "Lees ervaringen van klanten uit Eersel, Bladel, Reusel en de Kempen.",
+        description: "Lees klantervaringen over stucwerk in Bergeijk, Eersel, Reusel, Westerhoven en de Kempen.",
       },
       contact: {
         title: "Contact stukadoor binnen 20 km van Bergeijk | Stukadoorsteam De Kempen",
@@ -449,6 +482,26 @@ export default function App() {
     document
       .querySelector('meta[name="robots"]')
       ?.setAttribute("content", activeTab === "admin" ? "noindex, nofollow" : "index, follow");
+
+    const nextUrl = getTabUrl(activeTab);
+    const currentUrl = `${window.location.pathname}${window.location.search}`;
+    if (currentUrl !== nextUrl) {
+      window.history.replaceState({ tab: activeTab }, "", nextUrl);
+    }
+
+    const canonicalUrl =
+      activeTab === "home" || activeTab === "admin"
+        ? "https://www.stukadoorsteamdekempen.nl/"
+        : `https://www.stukadoorsteamdekempen.nl/?tab=${TAB_TO_QUERY[activeTab]}`;
+
+    let canonicalLink = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!canonicalLink) {
+      canonicalLink = document.createElement("link");
+      canonicalLink.rel = "canonical";
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.href = canonicalUrl;
+    document.querySelector('meta[property="og:url"]')?.setAttribute("content", canonicalUrl);
   }, [activeTab]);
 
   // Fetch admin quotes from API
@@ -1135,14 +1188,21 @@ export default function App() {
                         </div>
                         <h1 className="font-display font-black text-4xl sm:text-6xl lg:text-7xl leading-none tracking-tighter">
                           Stukadoor in <br/>
-                          <span className="text-brand-clay-500">de Kempen</span>
+                          <span className="text-brand-clay-500">Bergeijk & de Kempen</span>
                         </h1>
                         <p className="text-brand-beige-200 text-sm sm:text-base max-w-xl leading-relaxed">
-                          Jeroen, Bram & Kay leveren strak stucwerk binnen 20 km van Bergeijk — o.a. Eersel, Valkenswaard, Bladel, Reusel, Lommel, Pelt en Borkel en Schaft.
+                          Jeroen, Bram & Kay leveren strak stucwerk vanuit Bergeijk — in {KEMPEN_CITIES.length} plaatsen binnen 20 km, waaronder Hoogeloon, Westerhoven, Eersel en Valkenswaard.
                         </p>
                       </div>
 
                       <div className="relative z-10 flex flex-col sm:flex-row gap-4 pt-8">
+                        <a
+                          href="/stukadoor-bergeijk"
+                          className="bg-white/10 hover:bg-white/15 text-white border border-white/15 font-semibold px-6 py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 text-sm"
+                        >
+                          <MapPin className="w-4 h-4 text-brand-clay-400" />
+                          <span>Stukadoor Bergeijk</span>
+                        </a>
                         <button
                           onClick={() => { setActiveTab("calculator"); window.scrollTo({top:0, behavior:'smooth'}); }}
                           className="bg-brand-clay-500 hover:bg-brand-clay-600 text-white font-semibold px-6 py-3.5 rounded-xl shadow-lg shadow-brand-clay-500/25 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2 text-sm"
@@ -3127,6 +3187,9 @@ export default function App() {
               <h4 className="font-display font-semibold text-white text-sm uppercase tracking-wider">Snel Navigeren</h4>
               <ul className="space-y-2 text-xs text-brand-clay-300">
                 <li><a href="/stukadoor-rondom-bergeijk" className="hover:text-white transition-colors">Rondom Bergeijk</a></li>
+                <li><a href="/kosten-stucwerk" className="hover:text-white transition-colors">Kosten stucwerk</a></li>
+                <li><a href="/veelgestelde-vragen" className="hover:text-white transition-colors">Veelgestelde vragen</a></li>
+                <li><a href="/klantervaringen" className="hover:text-white transition-colors">Klantervaringen</a></li>
                 <li><a href="/werkgebied" className="hover:text-white transition-colors">Werkgebied</a></li>
                 <li><a href="/diensten" className="hover:text-white transition-colors">Diensten</a></li>
                 <li><a href="/stukadoor-prijzen" className="hover:text-white transition-colors">Prijzen</a></li>
