@@ -19,6 +19,14 @@ import {
   KOSTEN_STUCWERK_REDIRECTS,
   type ComparisonGuideData,
 } from "./seoContentPages";
+import { getAllExpansionSitemapUrls } from "./seoExpansion";
+import {
+  EXTRA_COMPARISON_GUIDES,
+  KOSTEN_CITY_PAGES,
+  registerSeoExpansionRoutes,
+} from "./seoExpansionServer";
+
+const ALL_COMPARISON_GUIDES: ComparisonGuideData[] = [...COMPARISON_GUIDES, ...EXTRA_COMPARISON_GUIDES];
 
 dotenv.config();
 
@@ -365,6 +373,7 @@ function renderSeoFooterNav(): string {
           <a href="/stukadoor-kempen">Stukadoor Kempen</a> ·
           <a href="/stukadoor-rondom-bergeijk">Rondom Bergeijk</a> ·
           <a href="/kosten-stucwerk">Kosten stucwerk</a> ·
+          <a href="/offerte-stukadoor">Offerte stukadoor</a> ·
           <a href="/veelgestelde-vragen">FAQ</a> ·
           <a href="/werkgebied">Werkgebied</a> ·
           <a href="/diensten">Diensten</a> ·
@@ -1409,8 +1418,10 @@ function renderSiteOverviewPage() {
     { name: "Werkgebied", href: "/werkgebied" },
     { name: "Diensten", href: "/diensten" },
     { name: "Kosten stucwerk", href: "/kosten-stucwerk" },
+    { name: "Offerte stukadoor", href: "/offerte-stukadoor" },
     { name: "Veelgestelde vragen", href: "/veelgestelde-vragen" },
     { name: "Klantervaringen", href: "/klantervaringen" },
+    { name: "Plafond stucen", href: "/plafond-stucen" },
     { name: "Stukadoor prijzen", href: "/stukadoor-prijzen" },
     { name: "Contact stukadoor", href: "/contact-stukadoor" },
     { name: "Over ons", href: "/over-ons" },
@@ -1470,6 +1481,8 @@ function renderSiteOverviewPage() {
       <h2>Diensten (${SERVICE_LANDING_PAGES.length})</h2>
       <div class="grid">${serviceCards}</div>
       <p>Combinatiepagina's per dienst en plaats: ${COMBO_LANDING_PAGES.length} pagina's.</p>
+      <h2>SEO-expansie (${getAllExpansionSitemapUrls().length} extra pagina's)</h2>
+      <p>Ring hubs, ruimte-diensten, kosten/offerte per plaats, verbouwing, how-to, team en referenties — zie <a href="/sitemap.xml">sitemap.xml</a>.</p>
       ${renderSeoFooterNav()}
     </main>
   </body>
@@ -1595,12 +1608,8 @@ app.get("/stukadoor-prijzen", (_req, res) => {
   res.type("html").send(renderPricingPage());
 });
 
-app.get("/offerte-stukadoor", (_req, res) => {
-  res.redirect(301, "/stukadoor-prijzen");
-});
-
 app.get("/stukadoor-offerte", (_req, res) => {
-  res.redirect(301, "/stukadoor-prijzen");
+  res.redirect(301, "/offerte-stukadoor");
 });
 
 for (const redirectPath of KOSTEN_STUCWERK_REDIRECTS) {
@@ -1802,108 +1811,17 @@ function renderKostenStucwerkPage() {
       <section>
         <h2>Richtprijzen per type stucwerk</h2>
         <div class="grid">${priceCards}</div>
-        <h2>Kosten stucwerk in Bergeijk en omgeving</h2>
-        <p>Wilt u weten wat stucwerk kost in uw plaats? Bekijk onze pagina voor <a href="/kosten-stucwerk-bergeijk">kosten stucwerk in Bergeijk</a> of kies uw plaats via <a href="/stukadoor-rondom-bergeijk">stukadoor rondom Bergeijk</a>.</p>
+        <h2>Kosten stucwerk per plaats</h2>
+        <div class="grid">${KOSTEN_CITY_PAGES.slice(0, 12)
+          .map(
+            (page) =>
+              `<a class="card" href="/${page.slug}"><strong>Kosten stucwerk ${escapeHtml(page.city)}</strong><br />± ${page.distanceKm} km van Bergeijk</a>`
+          )
+          .join("")}</div>
+        <p><a href="/offerte-stukadoor">Offerte stukadoor</a> · <a href="/stukadoor-rondom-bergeijk">Alle plaatsen rond Bergeijk</a></p>
         <h2>Veelgestelde vragen over kosten</h2>
         <div class="grid">${renderFaqCards(faqs)}</div>
         <p><a href="/stukadoor-prijzen">Alle stukadoor prijzen</a> · <a href="/veelgestelde-vragen">Meer vragen</a> · <a href="/glad-pleisterwerk-vs-schuurwerk">Glad vs schuurwerk</a></p>
-        ${renderSeoFooterNav()}
-      </section>
-    </main>
-  </body>
-</html>`;
-}
-
-function renderKostenStucwerkBergeijkPage() {
-  const title = "Kosten stucwerk Bergeijk | Prijs per m² en offerte";
-  const description =
-    "Wat kost stucwerk in Bergeijk? Richtprijzen voor glad pleisterwerk, schuurwerk, renovatie en betonlook. Bereken online uw prijs bij Stukadoorsteam De Kempen.";
-  const url = `${BASE_URL}/kosten-stucwerk-bergeijk`;
-  const breadcrumbItems = [
-    { name: "Home", href: "/" },
-    { name: "Kosten stucwerk", href: "/kosten-stucwerk" },
-    { name: "Kosten stucwerk Bergeijk", href: "/kosten-stucwerk-bergeijk" },
-  ];
-  const faqs = [
-    {
-      question: "Wat kost een stukadoor in Bergeijk per m²?",
-      answer:
-        "Voor glad pleisterwerk in Bergeijk ligt de richtprijs vaak tussen €15 en €25 per m². Schuurwerk tussen €18 en €28 per m².",
-    },
-    {
-      question: "Komen jullie gratis langs in Bergeijk voor advies?",
-      answer: "Ja, binnen ons werkgebied rond Bergeijk denken wij graag mee en komen we indien nodig op locatie kijken.",
-    },
-    {
-      question: "Hoe snel kan ik een richtprijs krijgen?",
-      answer: "Via de offertecalculator krijgt u direct een indicatie. Wij reageren meestal binnen één werkdag op aanvragen.",
-    },
-  ];
-  const nearbyLinks = LOCAL_LANDING_PAGES.filter((page) => page.distanceKm > 0 && page.distanceKm <= 12)
-    .map(
-      (page) =>
-        `<a class="card" href="/${page.slug}"><strong>Stukadoor ${escapeHtml(page.city)}</strong><br />± ${page.distanceKm} km van Bergeijk</a>`
-    )
-    .join("");
-  const comboLinks = SERVICE_LANDING_PAGES.map(
-    (servicePage) =>
-      `<a class="card" href="/${servicePage.slug}-bergeijk"><strong>${escapeHtml(servicePage.name)} Bergeijk</strong><br />${escapeHtml(servicePage.price)}</a>`
-  ).join("");
-
-  return `<!doctype html>
-<html lang="nl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>${title}</title>
-    <meta name="description" content="${description}" />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="${url}" />
-    ${renderAlternateLinks(url)}
-    ${renderSeoAssets()}
-    ${renderSocialImageMeta(title, description)}
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="nl_NL" />
-    <meta property="og:title" content="${title}" />
-    <meta property="og:description" content="${description}" />
-    <meta property="og:url" content="${url}" />
-    ${renderWebPageJsonLd(title, description, url)}
-    ${renderBreadcrumbJsonLd(breadcrumbItems)}
-    ${renderOfferCatalogJsonLd()}
-    ${renderFaqJsonLd(faqs)}
-    <style>
-      body{margin:0;font-family:Inter,Arial,sans-serif;background:#faf9f6;color:#1c1917;line-height:1.6}
-      main{max-width:980px;margin:0 auto;padding:48px 20px}
-      .hero{background:#172554;color:#fff;border-radius:28px;padding:40px;box-shadow:0 24px 70px rgba(15,23,42,.18)}
-      .label{color:#fb923c;text-transform:uppercase;letter-spacing:.18em;font-size:12px;font-weight:800}
-      h1{font-size:clamp(40px,7vw,76px);line-height:.92;margin:14px 0 18px;letter-spacing:-.05em}
-      h2{font-size:28px;line-height:1.15;margin:36px 0 12px;color:#172554}
-      .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:24px}
-      .card{background:#fff;border:1px solid #e7e5e4;border-radius:20px;padding:20px;text-decoration:none;color:#1c1917}
-      .card strong{color:#172554}
-      .breadcrumb{font-size:13px;margin-bottom:18px;display:flex;gap:8px;flex-wrap:wrap;color:#78716c}
-      .cta{display:inline-block;margin-top:24px;background:#f97316;color:#fff;padding:14px 20px;border-radius:14px;text-decoration:none;font-weight:800}
-      a{color:#c2410c}
-    </style>
-  </head>
-  <body>
-    ${renderSeoSiteHeader()}
-    <main>
-      ${renderBreadcrumbNav(breadcrumbItems)}
-      <section class="hero">
-        <div class="label">Stukadoor Bergeijk</div>
-        <h1>Kosten stucwerk Bergeijk</h1>
-        <p>Zoekt u de kosten van stucwerk in Bergeijk? Jeroen, Bram en Kay werken vanuit Bergeijk en geven vooraf duidelijkheid over richtprijzen per m².</p>
-        <a class="cta" href="/?tab=calculator">Bereken uw richtprijs</a>
-      </section>
-      <section>
-        <h2>Stucwerk prijzen per dienst in Bergeijk</h2>
-        <div class="grid">${comboLinks}</div>
-        <h2>Stukadoor in de buurt van Bergeijk</h2>
-        <div class="grid">${nearbyLinks}</div>
-        <h2>Veelgestelde vragen over kosten in Bergeijk</h2>
-        <div class="grid">${renderFaqCards(faqs)}</div>
-        <p><a href="/stukadoor-bergeijk">Stukadoor Bergeijk</a> · <a href="/kosten-stucwerk">Kosten stucwerk regio</a> · <a href="/contact-stukadoor">Contact opnemen</a></p>
         ${renderSeoFooterNav()}
       </section>
     </main>
@@ -1920,7 +1838,7 @@ function renderVeelgesteldeVragenPage() {
     { name: "Home", href: "/" },
     { name: "Veelgestelde vragen", href: "/veelgestelde-vragen" },
   ];
-  const guideLinks = COMPARISON_GUIDES.map(
+  const guideLinks = ALL_COMPARISON_GUIDES.map(
     (guide) => `<a class="card" href="/${guide.slug}"><strong>${escapeHtml(guide.heading)}</strong><br />${escapeHtml(guide.intro)}</a>`
   ).join("");
 
@@ -2095,10 +2013,6 @@ function renderKlantervaringenPage() {
 
 app.get("/kosten-stucwerk", (_req, res) => {
   res.type("html").send(renderKostenStucwerkPage());
-});
-
-app.get("/kosten-stucwerk-bergeijk", (_req, res) => {
-  res.type("html").send(renderKostenStucwerkBergeijkPage());
 });
 
 app.get("/veelgestelde-vragen", (_req, res) => {
@@ -2476,6 +2390,25 @@ app.get("/stukadoor-contact", (_req, res) => {
   res.redirect(301, "/contact-stukadoor");
 });
 
+registerSeoExpansionRoutes(app, {
+  baseUrl: BASE_URL,
+  escapeHtml,
+  renderAlternateLinks,
+  renderSeoAssets,
+  renderSocialImageMeta,
+  renderWebPageJsonLd,
+  renderBreadcrumbJsonLd,
+  renderFaqJsonLd,
+  renderSeoSiteHeader,
+  renderSeoFooterNav,
+  renderBreadcrumbNav,
+  renderFaqCards,
+  renderOfferCatalogJsonLd,
+  renderComparisonGuidePage,
+  renderComparisonTable,
+  serviceLandingPages: SERVICE_LANDING_PAGES,
+});
+
 function renderSitemapXml() {
   const baseUrl = "https://www.stukadoorsteamdekempen.nl";
   const lastmod = SITEMAP_LASTMOD;
@@ -2490,14 +2423,14 @@ function renderSitemapXml() {
     { loc: "/contact-stukadoor", priority: "0.9" },
     { loc: "/stucwerk-droogtijd", priority: "0.8" },
     { loc: "/kosten-stucwerk", priority: "0.94" },
-    { loc: "/kosten-stucwerk-bergeijk", priority: "0.93" },
     { loc: "/veelgestelde-vragen", priority: "0.92" },
     { loc: "/klantervaringen", priority: "0.9" },
-    ...COMPARISON_GUIDES.map((guide) => ({ loc: `/${guide.slug}`, priority: "0.88" })),
+    ...ALL_COMPARISON_GUIDES.map((guide) => ({ loc: `/${guide.slug}`, priority: "0.88" })),
     ...REGION_SEO_PAGES.map((page) => ({ loc: `/${page.slug}`, priority: page.priority })),
     ...LOCAL_LANDING_PAGES.map((page) => ({ loc: `/${page.slug}`, priority: "0.9" })),
     ...SERVICE_LANDING_PAGES.map((page) => ({ loc: `/${page.slug}`, priority: "0.85" })),
     ...COMBO_LANDING_PAGES.map((page) => ({ loc: `/${page.slug}`, priority: "0.7" })),
+    ...getAllExpansionSitemapUrls(),
   ];
 
   return `<?xml version="1.0" encoding="UTF-8"?>

@@ -3188,6 +3188,9 @@ export default function App() {
               <ul className="space-y-2 text-xs text-brand-clay-300">
                 <li><a href="/stukadoor-rondom-bergeijk" className="hover:text-white transition-colors">Rondom Bergeijk</a></li>
                 <li><a href="/kosten-stucwerk" className="hover:text-white transition-colors">Kosten stucwerk</a></li>
+                <li><a href="/offerte-stukadoor" className="hover:text-white transition-colors">Offerte stukadoor</a></li>
+                <li><a href="/plafond-stucen" className="hover:text-white transition-colors">Plafond stucen</a></li>
+                <li><a href="/stucwerk-bij-verbouwing" className="hover:text-white transition-colors">Stucwerk bij verbouwing</a></li>
                 <li><a href="/veelgestelde-vragen" className="hover:text-white transition-colors">Veelgestelde vragen</a></li>
                 <li><a href="/klantervaringen" className="hover:text-white transition-colors">Klantervaringen</a></li>
                 <li><a href="/werkgebied" className="hover:text-white transition-colors">Werkgebied</a></li>
