@@ -187,7 +187,7 @@ const SERVICE_LANDING_PAGES = [
 
 const BASE_URL = "https://www.stukadoorsteamdekempen.nl";
 const LOGO_URL = `${BASE_URL}/logo-stukadoorsteam-de-kempen.png`;
-const OG_IMAGE_URL = `${BASE_URL}/images/hero_interior.jpg`;
+const OG_IMAGE_URL = `${BASE_URL}/images/hero_stukadoor_werk.jpg`;
 const SERVED_CITIES = LOCAL_LANDING_PAGES.map((page) => page.city);
 const SERVED_CITIES_JSON = JSON.stringify(SERVED_CITIES);
 const SITEMAP_LASTMOD = "2026-07-14";

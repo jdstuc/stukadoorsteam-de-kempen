@@ -37,11 +37,11 @@ import { LOCAL_LANDING_PAGES } from "../seoRegion";
 import { BrandImage } from "./BrandImage";
 
 const IMAGES = {
-  hero: "/images/hero_interior.jpg",
-  betonlook: "/images/betonlook_wall.jpg",
-  vakwerk: "/images/stukadoor_vakwerk.jpg",
-  schuurwerk: "/images/hero_interior.jpg",
-  renovatie: "/images/stukadoor_vakwerk.jpg",
+  hero: "/images/hero_stukadoor_werk.jpg",
+  betonlook: "/images/betonlook_badkamer.jpg",
+  vakwerk: "/images/pleisterwerk_toepassing.jpg",
+  schuurwerk: "/images/schuurwerk_plafond.jpg",
+  renovatie: "/images/renovatie_stucwerk.jpg",
   team: {
     jeroen: "/images/team/jeroen.jpg",
     bram: "/images/team/bram.jpg",
@@ -52,22 +52,22 @@ const IMAGES = {
 const SHOWCASE = [
   {
     src: IMAGES.hero,
-    alt: "Glad afgewerkt interieur met strak stucwerk",
+    alt: "Stukadoor aan het werk met glad pleisterwerk op een wand",
     title: "Glad pleisterwerk",
     subtitle: "Spiegelglad en sausklaar",
     objectPosition: "center",
   },
   {
     src: IMAGES.betonlook,
-    alt: "Betonlook badkamer afwerking",
+    alt: "Betonlook microcement afwerking in een badkamer",
     title: "Betonlook",
     subtitle: "Waterdicht en naadloos",
     objectPosition: "center",
   },
   {
     src: IMAGES.vakwerk,
-    alt: "Stukadoor aan het werk in de Kempen",
-    title: "Vakwerk op locatie",
+    alt: "Stukadoor brengt pleisterwerk aan met een spaan",
+    title: "Pleisterwerk op locatie",
     subtitle: "Netjes en stofarm",
     objectPosition: "center top",
   },
@@ -907,11 +907,11 @@ export default function App() {
                         <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-blue-100 to-red-100"></div>
                         <div className="relative overflow-hidden rounded-[1.75rem] bg-slate-100 shadow-2xl aspect-[4/5]">
                           <img
-                            src="/src/assets/images/hero_interior_1783519698007.jpg"
-                            alt="Strak afgewerkt stucwerk door Stukadoors Team De Kempen"
+                            src={IMAGES.hero}
+                            alt="Stukadoor aan het werk met pleisterwerk in een woning"
                             className="h-full w-full object-cover"
                             onError={(e) => {
-                              (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=900";
+                              (e.target as HTMLImageElement).src = IMAGES.vakwerk;
                             }}
                           />
                           <div className="absolute inset-x-5 bottom-5 rounded-2xl bg-white/95 p-5 shadow-xl backdrop-blur">
@@ -1006,12 +1006,12 @@ export default function App() {
                       <div className="lg:col-span-5 relative mt-8 lg:mt-0">
                         <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white aspect-[4/3] sm:aspect-square lg:aspect-[4/5] bg-brand-beige-200">
                           <img 
-                            src="/src/assets/images/stukadoor_vakwerk_1783519725470.jpg" 
+                            src={IMAGES.vakwerk} 
                             alt="Stukadoor De Kempen aan het werk" 
                             className="w-full h-full object-cover"
                             onError={(e) => {
                               // Fallback if image doesn't load immediately
-                              (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=600";
+                              (e.target as HTMLImageElement).src = IMAGES.hero;
                             }}
                           />
                           
@@ -1123,11 +1123,11 @@ export default function App() {
                     <div className="pt-10 max-w-3xl mx-auto">
                       <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white aspect-[16/9] bg-brand-beige-200">
                         <img 
-                          src="/src/assets/images/stukadoor_vakwerk_1783519725470.jpg" 
+                          src={IMAGES.vakwerk} 
                           alt="Stukadoor De Kempen aan het werk" 
                           className="w-full h-full object-cover"
                           onError={(e) => {
-                            (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=1200";
+                            (e.target as HTMLImageElement).src = IMAGES.hero;
                           }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-brand-dark-900/50 via-transparent to-transparent"></div>
@@ -1170,7 +1170,7 @@ export default function App() {
                     <div className="md:col-span-2 min-h-[420px] bg-gradient-to-br from-brand-dark-950 via-brand-dark-900 to-brand-dark-800 text-white rounded-3xl p-8 md:p-10 shadow-xl flex flex-col justify-between relative overflow-hidden group border border-brand-dark-800/50">
                       <BrandImage
                         src={IMAGES.hero}
-                        alt=""
+                        alt="Stukadoor aan het werk met pleisterwerk op een wand"
                         loading="eager"
                         zoom={false}
                         overlay={false}
@@ -1525,11 +1525,11 @@ export default function App() {
                     <div className="bg-brand-dark-900 border border-brand-dark-800 rounded-3xl p-4 shadow-2xl flex flex-col justify-between">
                       <div className="rounded-2xl overflow-hidden aspect-[4/3] md:aspect-square flex-grow bg-brand-dark-950 relative">
                         <img 
-                          src="/src/assets/images/stukadoor_vakwerk_1783519725470.jpg" 
+                          src={IMAGES.vakwerk} 
                           alt="Vakwerk" 
                           className="w-full h-full object-cover grayscale brightness-90 hover:grayscale-0 transition-all duration-500"
                           onError={(e) => {
-                            (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=600";
+                            (e.target as HTMLImageElement).src = IMAGES.hero;
                           }}
                         />
                         <div className="absolute top-3 left-3 bg-brand-clay-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
@@ -1677,11 +1677,11 @@ export default function App() {
                     <div className="lg:col-span-4 space-y-8">
                       <div className="relative rounded-none overflow-hidden bg-brand-beige-200 aspect-[3/4] border-8 border-brand-beige-100 shadow-xl">
                         <img 
-                          src="/src/assets/images/stukadoor_vakwerk_1783519725470.jpg" 
+                          src={IMAGES.vakwerk} 
                           alt="Vakmanschap" 
                           className="w-full h-full object-cover filter contrast-105"
                           onError={(e) => {
-                            (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=600";
+                            (e.target as HTMLImageElement).src = IMAGES.hero;
                           }}
                         />
                         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-dark-900/60 p-6 text-white">
@@ -1758,11 +1758,11 @@ export default function App() {
                       <div className="relative rounded-[2rem] border border-blue-300/30 bg-white/10 p-4 shadow-2xl backdrop-blur">
                         <div className="overflow-hidden rounded-[1.5rem] aspect-[4/5] bg-blue-900">
                           <img
-                            src="/src/assets/images/stukadoor_vakwerk_1783519725470.jpg"
+                            src={IMAGES.vakwerk}
                             alt="Strak stucwerk van Stukadoorsteam De Kempen"
                             className="h-full w-full object-cover mix-blend-luminosity opacity-90"
                             onError={(e) => {
-                              (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=800";
+                              (e.target as HTMLImageElement).src = IMAGES.hero;
                             }}
                           />
                         </div>
@@ -1819,11 +1819,11 @@ export default function App() {
                       <div className="absolute -right-16 top-12 h-56 w-56 rounded-full bg-red-600/30 blur-3xl"></div>
                       <div className="relative z-10 rounded-3xl overflow-hidden border-8 border-white/10 aspect-[16/10] bg-blue-900 shadow-2xl">
                         <img
-                          src="/src/assets/images/hero_interior_1783519698007.jpg"
+                          src={IMAGES.hero}
                           alt="Afgewerkte ruimte met stucwerk"
                           className="h-full w-full object-cover"
                           onError={(e) => {
-                            (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=900";
+                            (e.target as HTMLImageElement).src = IMAGES.vakwerk;
                           }}
                         />
                       </div>
@@ -1896,11 +1896,11 @@ export default function App() {
                         </div>
                         <div className="col-span-2 rounded-[2rem] overflow-hidden border-8 border-white shadow-2xl aspect-[16/8] bg-blue-100">
                           <img
-                            src="/src/assets/images/betonlook_wall_1783519711432.jpg"
+                            src={IMAGES.betonlook}
                             alt="Premium betonlook afwerking"
                             className="h-full w-full object-cover"
                             onError={(e) => {
-                              (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&q=80&w=1000";
+                              (e.target as HTMLImageElement).src = IMAGES.betonlook;
                             }}
                           />
                         </div>
@@ -1985,11 +1985,11 @@ export default function App() {
                         <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-red-600/30 blur-3xl"></div>
                         <div className="relative z-10 rounded-[2rem] overflow-hidden border-8 border-white/10 aspect-[4/3] bg-blue-900 shadow-xl">
                           <img
-                            src="/src/assets/images/stukadoor_vakwerk_1783519725470.jpg"
+                            src={IMAGES.vakwerk}
                             alt="Stukadoors Team De Kempen aan het werk"
                             className="h-full w-full object-cover"
                             onError={(e) => {
-                              (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=900";
+                              (e.target as HTMLImageElement).src = IMAGES.hero;
                             }}
                           />
                         </div>
@@ -2231,7 +2231,7 @@ export default function App() {
             <section className="py-16 bg-gradient-to-br from-brand-clay-500 to-brand-clay-700 text-white relative overflow-hidden">
               <BrandImage
                 src={IMAGES.betonlook}
-                alt=""
+                alt="Betonlook microcement afwerking in een badkamer"
                 zoom={false}
                 overlay={false}
                 className="absolute inset-0 opacity-25"
@@ -2288,7 +2288,7 @@ export default function App() {
             <div className="relative overflow-hidden bg-brand-dark-950 text-white">
               <BrandImage
                 src={IMAGES.hero}
-                alt=""
+                alt="Stukadoor aan het werk met pleisterwerk"
                 overlay={false}
                 zoom={false}
                 className="absolute inset-0 opacity-35"
