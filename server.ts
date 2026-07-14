@@ -19,7 +19,7 @@ import {
   KOSTEN_STUCWERK_REDIRECTS,
   type ComparisonGuideData,
 } from "./seoContentPages";
-import { getAllExpansionSitemapUrls } from "./seoExpansion";
+import { renderSitemapXml } from "./seoSitemap";
 import {
   EXTRA_COMPARISON_GUIDES,
   KOSTEN_CITY_PAGES,
@@ -216,7 +216,6 @@ const LOGO_URL = `${BASE_URL}/logo-stukadoorsteam-de-kempen.png`;
 const OG_IMAGE_URL = `${BASE_URL}/images/hero_stukadoor_werk.jpg`;
 const SERVED_CITIES = LOCAL_LANDING_PAGES.map((page) => page.city);
 const SERVED_CITIES_JSON = JSON.stringify(SERVED_CITIES);
-const SITEMAP_LASTMOD = "2026-07-14";
 
 const COMBO_SERVICE_PAGES = SERVICE_LANDING_PAGES;
 const COMBO_LOCATION_PAGES = LOCAL_LANDING_PAGES;
@@ -1499,7 +1498,7 @@ function renderSiteOverviewPage() {
       <h2>Diensten (${SERVICE_LANDING_PAGES.length})</h2>
       <div class="grid">${serviceCards}</div>
       <p>Combinatiepagina's per dienst en plaats: ${COMBO_LANDING_PAGES.length} pagina's.</p>
-      <h2>SEO-expansie (${getAllExpansionSitemapUrls().length} extra pagina's)</h2>
+      <h2>SEO-expansie (414+ pagina&apos;s in sitemap)</h2>
       <p>Ring hubs, ruimte-diensten, kosten/offerte per plaats, verbouwing, how-to, team en referenties — zie <a href="/sitemap.xml">sitemap.xml</a>.</p>
       ${renderSeoFooterNav()}
     </main>
@@ -2457,48 +2456,12 @@ registerSeoExpansionRoutes(app, {
   serviceLandingPages: SERVICE_LANDING_PAGES,
 });
 
-function renderSitemapXml() {
-  const baseUrl = "https://www.stukadoorsteamdekempen.nl";
-  const lastmod = SITEMAP_LASTMOD;
-  const urls = [
-    { loc: "/", priority: "1.0" },
-    { loc: "/werkgebied", priority: "0.95" },
-    { loc: "/stukadoor-kempen", priority: "0.95" },
-    { loc: "/stucwerk-kempen", priority: "0.95" },
-    { loc: "/diensten", priority: "0.95" },
-    { loc: "/over-ons", priority: "0.9" },
-    { loc: "/stukadoor-prijzen", priority: "0.9" },
-    { loc: "/contact-stukadoor", priority: "0.9" },
-    { loc: "/stucwerk-droogtijd", priority: "0.8" },
-    { loc: "/kosten-stucwerk", priority: "0.94" },
-    { loc: "/veelgestelde-vragen", priority: "0.92" },
-    { loc: "/klantervaringen", priority: "0.9" },
-    { loc: "/google-bedrijfsprofiel", priority: "0.88" },
-    ...ALL_COMPARISON_GUIDES.map((guide) => ({ loc: `/${guide.slug}`, priority: "0.88" })),
-    ...REGION_SEO_PAGES.map((page) => ({ loc: `/${page.slug}`, priority: page.priority })),
-    ...LOCAL_LANDING_PAGES.map((page) => ({ loc: `/${page.slug}`, priority: "0.9" })),
-    ...SERVICE_LANDING_PAGES.map((page) => ({ loc: `/${page.slug}`, priority: "0.85" })),
-    ...COMBO_LANDING_PAGES.map((page) => ({ loc: `/${page.slug}`, priority: "0.7" })),
-    ...getAllExpansionSitemapUrls(),
-  ];
-
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls
-  .map(
-    (url) => `  <url>
-    <loc>${baseUrl}${url.loc}</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>${url.priority}</priority>
-  </url>`
-  )
-  .join("\n")}
-</urlset>`;
+function renderSitemapXmlHandler() {
+  return renderSitemapXml();
 }
 
 app.get("/sitemap.xml", (_req, res) => {
-  res.type("application/xml").send(renderSitemapXml());
+  res.type("application/xml").send(renderSitemapXmlHandler());
 });
 
 // API Routes
