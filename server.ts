@@ -21,6 +21,13 @@ import {
 } from "./seoContentPages";
 import { renderSitemapXml } from "./seoSitemap";
 import {
+  getCityExtraFaqs,
+  getCitySeoMeta,
+  getGezochtBergeijkExtraFaqs,
+  renderBergeijkTrustSection,
+  renderCityCommercialLinks,
+} from "./seoRankingContent";
+import {
   EXTRA_COMPARISON_GUIDES,
   KOSTEN_CITY_PAGES,
   registerSeoExpansionRoutes,
@@ -538,15 +545,21 @@ function renderNearbyCityLinks(currentCity: string): string {
 
 function renderLocalLandingPage(page: LocalLandingPageData) {
   const city = escapeHtml(page.city);
-  const intro = escapeHtml(page.intro);
   const citySlug = getCitySlug(page);
+  const rawCity = page.city;
+  const intro = escapeHtml(page.intro);
   const url = `${BASE_URL}/${page.slug}`;
   const distanceLabel =
     page.distanceKm === 0
       ? "Centrum Bergeijk"
       : `Ongeveer ${page.distanceKm} km van Bergeijk`;
-  const title = `Stukadoor ${city} | Pleisterwerk, schuurwerk en betonlook`;
-  const description = `Stukadoor in ${city} nodig? Stukadoorsteam De Kempen helpt met glad pleisterwerk, schuurwerk, renovatiestucwerk en betonlook binnen 20 km van Bergeijk.`;
+  const seoMeta = getCitySeoMeta(rawCity, citySlug, page.distanceKm);
+  const title = seoMeta?.title ?? `Stukadoor ${city} | Pleisterwerk, schuurwerk en betonlook`;
+  const description =
+    seoMeta?.description ??
+    `Stukadoor in ${city} nodig? Stukadoorsteam De Kempen helpt met glad pleisterwerk, schuurwerk, renovatiestucwerk en betonlook binnen 20 km van Bergeijk.`;
+  const heading = seoMeta?.h1 ?? `Stukadoor ${city}`;
+  const heroLabel = seoMeta?.heroLabel ?? `${distanceLabel} · Stukadoor binnen 20 km van Bergeijk`;
   const breadcrumbItems = [
     { name: "Home", href: "/" },
     { name: "Rondom Bergeijk", href: "/stukadoor-rondom-bergeijk" },
@@ -570,7 +583,10 @@ function renderLocalLandingPage(page: LocalLandingPageData) {
       question: `Hoe lang moet stucwerk drogen in ${page.city}?`,
       answer: "Reken op ongeveer 1 dag droogtijd per millimeter laagdikte. Meer uitleg staat op onze pagina over stucwerk droogtijd.",
     },
+    ...getCityExtraFaqs(rawCity, citySlug),
   ];
+  const bergeijkTrust = rawCity === "Bergeijk" ? renderBergeijkTrustSection() : "";
+  const commercialLinks = renderCityCommercialLinks(rawCity, citySlug);
 
   return `<!doctype html>
 <html lang="nl">
@@ -630,8 +646,8 @@ function renderLocalLandingPage(page: LocalLandingPageData) {
     <main>
       ${renderBreadcrumbNav(breadcrumbItems)}
       <section class="hero">
-        <div class="label">${escapeHtml(distanceLabel)} · Stukadoor binnen 20 km van Bergeijk</div>
-        <h1>Stukadoor ${city}</h1>
+        <div class="label">${escapeHtml(heroLabel)}</div>
+        <h1>${escapeHtml(heading)}</h1>
         <p>${intro}</p>
         <a class="cta" href="/?tab=calculator">Vrijblijvende offerte berekenen</a>
       </section>
@@ -647,6 +663,8 @@ function renderLocalLandingPage(page: LocalLandingPageData) {
         </div>
         <h2>Waarom kiezen voor Stukadoorsteam De Kempen?</h2>
         <p>U hebt direct contact met de vakmannen die het werk uitvoeren. We denken mee over voorbereiding, droogtijd, planning en de beste afwerking voor uw woning in ${city}. Vraag online een richtprijs aan of neem contact op voor advies op locatie.</p>
+        ${bergeijkTrust}
+        ${commercialLinks}
         <h2>Veelgestelde vragen over stucwerk in ${city}</h2>
         <div class="grid">
           ${renderFaqCards(faqs)}
@@ -1099,7 +1117,10 @@ function renderRegionExpansionPage(page: (typeof REGION_SEO_PAGES)[number]) {
       question: "Komen jullie ook in Belgische grensgemeenten?",
       answer: "Ja, wij werken ook in Lommel, Pelt, Achel, Overpelt en Neerpelt binnen ons werkgebied rond Bergeijk.",
     },
+    ...(page.slug === "stukadoor-gezocht-bergeijk" ? getGezochtBergeijkExtraFaqs() : []),
   ];
+  const gezochtCommercial =
+    page.slug === "stukadoor-gezocht-bergeijk" ? renderCityCommercialLinks("Bergeijk", "bergeijk") : "";
 
   return `<!doctype html>
 <html lang="nl">
@@ -1149,6 +1170,7 @@ function renderRegionExpansionPage(page: (typeof REGION_SEO_PAGES)[number]) {
         <a class="cta" href="/?tab=calculator">Vrijblijvende offerte berekenen</a>
       </section>
       ${ringSections}
+      ${gezochtCommercial}
       <section>
         <h2>Stucwerk diensten rondom Bergeijk</h2>
         <div class="grid">${serviceCards}</div>
@@ -1207,7 +1229,7 @@ app.get("/diensten", (_req, res) => {
 });
 
 function renderStukadoorKempenPage() {
-  const title = "Stukadoor in de Kempen | Binnen 20 km van Bergeijk";
+  const title = "Stukadoor Kempen & Bergeijk | Stukadoorsteam De Kempen";
   const description =
     "Zoekt u een stukadoor in de Kempen? Stukadoorsteam De Kempen helpt met glad pleisterwerk, schuurwerk, renovatiestucwerk en betonlook binnen 20 km van Bergeijk.";
   const url = `${BASE_URL}/stukadoor-kempen`;
@@ -1512,6 +1534,10 @@ app.get("/stucwerk-kempen", (_req, res) => {
 
 app.get("/stucwerk", (_req, res) => {
   res.redirect(301, "/stucwerk-kempen");
+});
+
+app.get("/stukadoor", (_req, res) => {
+  res.redirect(301, "/stukadoor-gezocht-bergeijk");
 });
 
 app.get("/pleisterwerk", (_req, res) => {

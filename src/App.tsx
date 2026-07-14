@@ -459,8 +459,9 @@ export default function App() {
   useEffect(() => {
     const pageMeta: Record<ActiveTab, { title: string; description: string }> = {
       home: {
-        title: "Stukadoor Bergeijk | Stucwerk binnen 20 km van Bergeijk",
-        description: `Stukadoorsteam De Kempen in Bergeijk en omgeving: ${KEMPEN_CITIES_SEO_TEXT}. Glad pleisterwerk, schuurwerk, renovatie en betonlook.`,
+        title: "Stukadoor Bergeijk | Stukadoorsteam De Kempen – stucwerk Kempen",
+        description:
+          "Stukadoor gezocht in Bergeijk? Jeroen, Bram en Kay leveren glad pleisterwerk, schuurwerk, renovatie en betonlook in de Kempen. Vrijblijvende offerte online.",
       },
       services: {
         title: "Stucwerk diensten | Glad pleisterwerk, schuurwerk en betonlook",
@@ -1311,6 +1312,24 @@ export default function App() {
                     </div>
 
                   </div>
+
+                  <section className="mt-8 bg-brand-beige-100 rounded-2xl border border-brand-beige-200 p-5">
+                    <h2 className="font-display font-bold text-base text-brand-dark-900 mb-3">
+                      Stukadoor in Bergeijk en de Kempen
+                    </h2>
+                    <p className="text-xs text-brand-dark-800 mb-3">
+                      Lokale stukadoors voor glad pleisterwerk, schuurwerk, renovatie en betonlook — vanuit Bergeijk in 30 plaatsen.
+                    </p>
+                    <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs font-medium">
+                      <a href="/stukadoor-bergeijk" className="text-brand-clay-700 hover:text-brand-clay-900">Stukadoor Bergeijk</a>
+                      <a href="/stukadoor-gezocht-bergeijk" className="text-brand-clay-700 hover:text-brand-clay-900">Stukadoor gezocht</a>
+                      <a href="/offerte-stukadoor" className="text-brand-clay-700 hover:text-brand-clay-900">Offerte stukadoor</a>
+                      <a href="/kosten-stucwerk" className="text-brand-clay-700 hover:text-brand-clay-900">Kosten stucwerk</a>
+                      <a href="/stukadoor-eersel" className="text-brand-clay-700 hover:text-brand-clay-900">Stukadoor Eersel</a>
+                      <a href="/stukadoor-valkenswaard" className="text-brand-clay-700 hover:text-brand-clay-900">Stukadoor Valkenswaard</a>
+                      <a href="/stukadoor-rondom-bergeijk" className="text-brand-clay-700 hover:text-brand-clay-900">Alle plaatsen</a>
+                    </div>
+                  </section>
 
                   <section className="mt-10">
                     <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-5">
