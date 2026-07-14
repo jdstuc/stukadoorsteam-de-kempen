@@ -402,6 +402,22 @@ export default function App() {
   const [adminLoading, setAdminLoading] = useState<boolean>(false);
   const [adminError, setAdminError] = useState<string>("");
 
+  const [googleReviewUrl, setGoogleReviewUrl] = useState<string | null>(null);
+  const [googleMapsUrl, setGoogleMapsUrl] = useState<string>(
+    "https://www.google.com/maps/search/?api=1&query=Stukadoorsteam+De+Kempen,Bergeijk,Noord-Brabant"
+  );
+
+  useEffect(() => {
+    fetch("/api/public-seo")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { googleReviewUrl?: string | null; googleMapsUrl?: string } | null) => {
+        if (!data) return;
+        if (data.googleReviewUrl) setGoogleReviewUrl(data.googleReviewUrl);
+        if (data.googleMapsUrl) setGoogleMapsUrl(data.googleMapsUrl);
+      })
+      .catch(() => undefined);
+  }, []);
+
   // Auto scroll to chat end
   useEffect(() => {
     if (chatEndRef.current) {
@@ -2775,15 +2791,34 @@ export default function App() {
             <div className="mt-12 bg-brand-beige-100 rounded-3xl p-8 border border-brand-beige-300 text-center max-w-2xl mx-auto space-y-4">
               <h3 className="font-display font-bold text-xl text-brand-dark-900">Bent u een bestaande klant?</h3>
               <p className="text-sm text-brand-dark-800">
-                Laat uw ervaring weten via contact of mond-tot-mondreclame in de Kempen. Voor ons als lokale ZZP&apos;ers is dat goud waard!
+                Laat uw ervaring weten op Google — dat helpt andere klanten in de Kempen ons te vinden.
               </p>
-              <div className="pt-2">
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                {googleReviewUrl ? (
+                  <a
+                    href={googleReviewUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-brand-clay-600 hover:bg-brand-clay-700 text-white font-bold px-6 py-3 rounded-xl shadow-sm inline-flex items-center gap-2 text-sm"
+                  >
+                    <span>Schrijf een Google-review</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </a>
+                ) : null}
                 <a
-                  href="/contact-stukadoor"
+                  href={googleMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-white hover:bg-brand-beige-50 text-brand-clay-700 font-bold px-6 py-3 rounded-xl border border-brand-beige-300 shadow-sm inline-flex items-center gap-2 text-sm"
                 >
-                  <span>Deel uw ervaring</span>
+                  <span>{googleReviewUrl ? "Bekijk ons op Google Maps" : "Vind ons op Google Maps"}</span>
                   <ChevronRight className="w-4 h-4" />
+                </a>
+                <a
+                  href="/google-bedrijfsprofiel"
+                  className="text-sm text-brand-clay-700 hover:text-brand-clay-900 underline underline-offset-2"
+                >
+                  Google bedrijfsprofiel
                 </a>
               </div>
             </div>
@@ -3193,6 +3228,7 @@ export default function App() {
                 <li><a href="/stucwerk-bij-verbouwing" className="hover:text-white transition-colors">Stucwerk bij verbouwing</a></li>
                 <li><a href="/veelgestelde-vragen" className="hover:text-white transition-colors">Veelgestelde vragen</a></li>
                 <li><a href="/klantervaringen" className="hover:text-white transition-colors">Klantervaringen</a></li>
+                <li><a href="/google-bedrijfsprofiel" className="hover:text-white transition-colors">Google bedrijfsprofiel</a></li>
                 <li><a href="/werkgebied" className="hover:text-white transition-colors">Werkgebied</a></li>
                 <li><a href="/diensten" className="hover:text-white transition-colors">Diensten</a></li>
                 <li><a href="/stukadoor-prijzen" className="hover:text-white transition-colors">Prijzen</a></li>
@@ -3241,12 +3277,12 @@ export default function App() {
                 ))}
               </p>
               <a
-                href="https://www.google.com/maps/search/?api=1&query=Bergeijk,+Noord-Brabant,+Nederland"
+                href={googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block text-xs text-brand-clay-400 hover:text-white transition-colors"
               >
-                Bekijk ons werkgebied op Google Maps →
+                Bekijk ons op Google Maps →
               </a>
               <div className="bg-brand-dark-900 p-3 rounded-lg border border-brand-dark-800 text-center">
                 <span className="text-[10px] text-brand-clay-300 block">📞 Bellen of WhatsAppen:</span>

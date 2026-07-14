@@ -25,6 +25,16 @@ import {
   KOSTEN_CITY_PAGES,
   registerSeoExpansionRoutes,
 } from "./seoExpansionServer";
+import {
+  getGoogleMapsProfileUrl,
+  getGoogleReviewUrl,
+  getGoogleSiteVerificationFileBody,
+  getGoogleSiteVerificationFileName,
+  getPublicSeoConfig,
+  getSameAsUrls,
+  injectGoogleSiteVerification,
+} from "./seoBusiness";
+import { renderGoogleBedrijfsprofielPage } from "./seoGoogleSetup";
 
 const ALL_COMPARISON_GUIDES: ComparisonGuideData[] = [...COMPARISON_GUIDES, ...EXTRA_COMPARISON_GUIDES];
 
@@ -33,6 +43,14 @@ dotenv.config();
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const DB_FILE = path.join(process.env.VERCEL ? "/tmp" : process.cwd(), "quotes_db.json");
+
+const googleSiteVerificationFile = getGoogleSiteVerificationFileName();
+const googleSiteVerificationFileBody = getGoogleSiteVerificationFileBody();
+if (googleSiteVerificationFile && googleSiteVerificationFileBody) {
+  app.get(`/${googleSiteVerificationFile}`, (_req, res) => {
+    res.type("text/html").send(googleSiteVerificationFileBody);
+  });
+}
 
 type StoredQuote = QuoteRequest;
 
@@ -2290,6 +2308,9 @@ function renderContactPage() {
         "Wij werken vooral binnen ongeveer 20 km van Bergeijk, waaronder Eersel, Valkenswaard, Luyksgestel, Lommel, Pelt, Hapert en Steensel.",
     },
   ];
+  const sameAsUrls = getSameAsUrls();
+  const googleMapsUrl = getGoogleMapsProfileUrl();
+  const googleReviewUrl = getGoogleReviewUrl();
   const contactJsonLd = `<script type="application/ld+json">${JSON.stringify({
     "@context": "https://schema.org",
     "@type": "ContactPage",
@@ -2304,6 +2325,7 @@ function renderContactPage() {
       url: BASE_URL,
       telephone: "+31 497 123 456",
       email: "info@stukadoorsteamdekempen.nl",
+      ...(sameAsUrls.length ? { sameAs: sameAsUrls } : {}),
       contactPoint: {
         "@type": "ContactPoint",
         telephone: "+31 497 123 456",
@@ -2314,6 +2336,9 @@ function renderContactPage() {
       },
     },
   })}</script>`;
+  const googleProfileCard = googleReviewUrl
+    ? `<article class="card"><strong>Google review</strong><br /><a href="${escapeHtml(googleReviewUrl)}" target="_blank" rel="noopener noreferrer">Laat een review achter op Google</a></article>`
+    : `<article class="card"><strong>Google Maps</strong><br /><a href="${escapeHtml(googleMapsUrl)}" target="_blank" rel="noopener noreferrer">Vind ons op Google Maps</a></article>`;
 
   return `<!doctype html>
 <html lang="nl">
@@ -2367,10 +2392,12 @@ function renderContactPage() {
           <article class="card"><strong>E-mail</strong><br /><a href="mailto:info@stukadoorsteamdekempen.nl">info@stukadoorsteamdekempen.nl</a></article>
           <article class="card"><strong>Werkgebied</strong><br /><a href="/werkgebied">${LOCAL_LANDING_PAGES.length} plaatsen in de Kempen</a></article>
           <article class="card"><strong>Regio Bergeijk</strong><br /><a href="/stukadoor-rondom-bergeijk">Alle plaatsen rondom Bergeijk</a></article>
+          ${googleProfileCard}
+          <article class="card"><strong>Google setup</strong><br /><a href="/google-bedrijfsprofiel">Bedrijfsprofiel &amp; Search Console</a></article>
         </div>
         <h2>Ons werkgebied</h2>
         <p>Wij werken vanuit Bergeijk in o.a. ${SERVED_CITIES.slice(0, 8).join(", ")} en omliggende dorpen.</p>
-        <p><a href="https://www.google.com/maps/search/?api=1&query=Bergeijk,+Noord-Brabant,+Nederland" target="_blank" rel="noopener noreferrer">Bekijk ons werkgebied op Google Maps</a></p>
+        <p><a href="${escapeHtml(googleMapsUrl)}" target="_blank" rel="noopener noreferrer">Bekijk ons op Google Maps</a> · <a href="/google-bedrijfsprofiel">Google bedrijfsprofiel</a></p>
         <iframe title="Werkgebied Stukadoorsteam De Kempen rond Bergeijk" src="https://maps.google.com/maps?q=Bergeijk,+Nederland&z=10&output=embed" width="100%" height="320" style="border:0;border-radius:20px;margin-top:16px" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         <h2>Veelgestelde vragen over contact</h2>
         <div class="grid">${renderFaqCards(faqs)}</div>
@@ -2388,6 +2415,27 @@ app.get("/contact-stukadoor", (_req, res) => {
 
 app.get("/stukadoor-contact", (_req, res) => {
   res.redirect(301, "/contact-stukadoor");
+});
+
+app.get("/google-bedrijfsprofiel", (_req, res) => {
+  res.type("html").send(
+    renderGoogleBedrijfsprofielPage({
+      baseUrl: BASE_URL,
+      escapeHtml,
+      renderAlternateLinks,
+      renderSeoAssets,
+      renderSocialImageMeta,
+      renderWebPageJsonLd,
+      renderBreadcrumbJsonLd,
+      renderSeoSiteHeader,
+      renderSeoFooterNav,
+      renderBreadcrumbNav,
+    })
+  );
+});
+
+app.get(["/google-reviews", "/google-review"], (_req, res) => {
+  res.redirect(301, "/google-bedrijfsprofiel");
 });
 
 registerSeoExpansionRoutes(app, {
@@ -2425,6 +2473,7 @@ function renderSitemapXml() {
     { loc: "/kosten-stucwerk", priority: "0.94" },
     { loc: "/veelgestelde-vragen", priority: "0.92" },
     { loc: "/klantervaringen", priority: "0.9" },
+    { loc: "/google-bedrijfsprofiel", priority: "0.88" },
     ...ALL_COMPARISON_GUIDES.map((guide) => ({ loc: `/${guide.slug}`, priority: "0.88" })),
     ...REGION_SEO_PAGES.map((page) => ({ loc: `/${page.slug}`, priority: page.priority })),
     ...LOCAL_LANDING_PAGES.map((page) => ({ loc: `/${page.slug}`, priority: "0.9" })),
@@ -2457,6 +2506,11 @@ app.get("/sitemap.xml", (_req, res) => {
 // GET /api/health
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", time: new Date().toISOString() });
+});
+
+// GET /api/public-seo - Publieke Google/SEO links voor de SPA
+app.get("/api/public-seo", (_req, res) => {
+  res.json(getPublicSeoConfig());
 });
 
 // POST /api/quotes - Submit a new quote request
@@ -2604,21 +2658,23 @@ function configureProductionAssets() {
 
   app.use(express.static(publicPath));
   app.use(express.static(distPath));
+
+  let preparedIndexHtml: string | null = null;
+  const indexPath = indexCandidates.find((candidate) => fs.existsSync(candidate));
+  if (indexPath) {
+    preparedIndexHtml = injectGoogleSiteVerification(fs.readFileSync(indexPath, "utf-8"));
+  }
+
   app.get("*", (req, res, next) => {
     if (req.path.startsWith("/api/")) {
       return next();
     }
 
-    const indexPath = indexCandidates.find((candidate) => fs.existsSync(candidate));
-    if (!indexPath) {
+    if (!preparedIndexHtml) {
       return next();
     }
 
-    res.sendFile(indexPath, (error) => {
-      if (error) {
-        next(error);
-      }
-    });
+    res.type("html").send(preparedIndexHtml);
   });
 }
 
